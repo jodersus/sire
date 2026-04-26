@@ -1,18 +1,19 @@
 /**
  * CanvasRenderer.ts
- * Setup del canvas, loop de renderizado, resize y limpieza.
+ * Loop de renderizado con soporte para wrap-around esférico.
  */
 
 import { Camera } from './Camera.js';
-import { HexCell, drawHexGrid } from './HexRenderer.js';
+import { drawHexGrid } from './HexRenderer.js';
 import { HUD } from './HUD.js';
+import type { RenderHexCell } from '../game/GameController.js';
 
 export interface RenderState {
-  cells: HexCell[];
+  cells: RenderHexCell[];
   camera: Camera;
   hud: HUD;
-  turn: number;
-  playerResources: Record<string, number>;
+  worldWidth: number;
+  worldHeight: number;
 }
 
 export class CanvasRenderer {
@@ -41,7 +42,6 @@ export class CanvasRenderer {
     window.addEventListener('resize', this.resize);
   }
 
-  /** Ajusta el tamaño interno del canvas al contenedor y DPR. */
   private resize = (): void => {
     const parent = this.canvas.parentElement;
     if (!parent) return;
@@ -54,19 +54,16 @@ export class CanvasRenderer {
     this.canvas.style.width = `${w}px`;
     this.canvas.style.height = `${h}px`;
 
-    // Reset transform para no acumular
     this.ctx.setTransform(1, 0, 0, 1, 0, 0);
     this.ctx.scale(this.dpr, this.dpr);
   };
 
-  /** Inicia el loop de renderizado. */
   start(): void {
     if (this.running) return;
     this.running = true;
     this.loop();
   }
 
-  /** Detiene el loop. */
   stop(): void {
     this.running = false;
     cancelAnimationFrame(this.animFrameId);
@@ -80,27 +77,26 @@ export class CanvasRenderer {
 
   private render(): void {
     const { width, height } = this.canvas;
-    const { cells, camera, hud } = this.state;
+    const { cells, camera, hud, worldWidth, worldHeight } = this.state;
 
-    // Limpiar
     this.ctx.save();
     this.ctx.setTransform(1, 0, 0, 1, 0, 0);
     this.ctx.clearRect(0, 0, width, height);
     this.ctx.restore();
 
-    // Fondo oscuro base
+    // Fondo
     this.ctx.save();
-    this.ctx.fillStyle = '#1a1a2e';
+    this.ctx.fillStyle = '#0f172a';
     this.ctx.fillRect(0, 0, width / this.dpr, height / this.dpr);
     this.ctx.restore();
 
-    // Capa mundo (cámara transforma)
+    // Capa mundo
     this.ctx.save();
     camera.apply(this.ctx);
-    drawHexGrid(this.ctx, camera, cells);
+    drawHexGrid(this.ctx, camera, cells, worldWidth, worldHeight);
     this.ctx.restore();
 
-    // Capa UI (sin transformación de cámara)
+    // Capa UI
     hud.draw(this.ctx, width / this.dpr, height / this.dpr);
   }
 

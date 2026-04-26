@@ -20,7 +20,7 @@ export class InputHandler {
         this.callbacks = callbacks;
         this.bindEvents();
     }
-    /** Actualiza el mapa de celdas para lookup rápido de hover/click. */
+    /** Actualiza el mapa de celdas para lookup rápido de hover/click. Opcional. */
     setCells(cells) {
         this.cells.clear();
         for (const c of cells) {

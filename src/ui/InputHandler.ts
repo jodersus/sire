@@ -4,20 +4,20 @@
  */
 
 import { Camera } from './Camera.js';
-import { HexCell, pixelToAxial } from './HexRenderer.js';
+import { pixelToAxial } from './HexRenderer.js';
 
 export interface InputCallbacks {
-  onHexClick?: (q: number, r: number, cell?: HexCell) => void;
-  onHexHover?: (q: number, r: number, cell?: HexCell) => void;
+  onHexClick?: (q: number, r: number, cell?: unknown) => void;
+  onHexHover?: (q: number, r: number, cell?: unknown) => void;
   onPan?: (dx: number, dy: number) => void;
   onZoom?: (screenX: number, screenY: number, delta: number) => void;
-  onContextMenu?: (q: number, r: number, cell?: HexCell) => void;
+  onContextMenu?: (q: number, r: number, cell?: unknown) => void;
 }
 
 export class InputHandler {
   private canvas: HTMLCanvasElement;
   private camera: Camera;
-  private cells: Map<string, HexCell> = new Map();
+  private cells: Map<string, unknown> = new Map();
   private callbacks: InputCallbacks;
 
   private dragging = false;
@@ -39,8 +39,8 @@ export class InputHandler {
     this.bindEvents();
   }
 
-  /** Actualiza el mapa de celdas para lookup rápido de hover/click. */
-  setCells(cells: HexCell[]): void {
+  /** Actualiza el mapa de celdas para lookup rápido de hover/click. Opcional. */
+  setCells(cells: { q: number; r: number }[]): void {
     this.cells.clear();
     for (const c of cells) {
       this.cells.set(`${c.q},${c.r}`, c);

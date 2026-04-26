@@ -1,156 +1,241 @@
 /**
  * HUD.ts
- * Interfaz de usuario: panel superior (recursos), panel lateral (acciones), minimapa, tecnologías.
- * Todo dibujado en Canvas 2D. Paneles oscuros semitransparentes.
+ * Interfaz en Canvas 2D. Muestra recursos, turno, fase, acciones.
  */
+import { TurnPhase } from '../game/GameState.js';
 export class HUD {
-    state;
     camera;
-    minimapSize = 120;
-    padding = 12;
-    panelAlpha = 0.85;
-    constructor(initial = {}, camera) {
-        this.state = {
-            turn: 1,
-            resources: {},
-            selectedHex: null,
-            availableActions: [],
-            techsUnlocked: [],
-            techsAvailable: [],
-            ...initial,
-        };
+    state = null;
+    logMessages = [];
+    maxLogLines = 6;
+    // Callbacks para botones
+    onEndTurn;
+    onTrainUnit;
+    onFoundCity;
+    onResearchTech;
+    onAdvancePhase;
+    // Hit areas para clicks
+    buttons = [];
+    constructor(camera) {
         this.camera = camera;
     }
-    update(partial) {
-        this.state = { ...this.state, ...partial };
+    updateState(state) {
+        this.state = state;
     }
-    /** Dibuja todo el HUD sobre el canvas. */
+    addLog(msg) {
+        this.logMessages.push(msg);
+        if (this.logMessages.length > this.maxLogLines) {
+            this.logMessages.shift();
+        }
+    }
+    clearButtons() {
+        this.buttons = [];
+    }
+    getButtonAt(x, y) {
+        for (const btn of this.buttons) {
+            if (x >= btn.x && x <= btn.x + btn.w && y >= btn.y && y <= btn.y + btn.h) {
+                return { action: btn.action, data: btn.data };
+            }
+        }
+        return null;
+    }
     draw(ctx, width, height) {
+        this.buttons = [];
         ctx.save();
-        ctx.font = '14px sans-serif';
+        ctx.font = '13px sans-serif';
         ctx.textBaseline = 'middle';
         this.drawTopBar(ctx, width);
         this.drawSidePanel(ctx, width, height);
-        this.drawMinimap(ctx, width, height);
-        this.drawTurnIndicator(ctx, width);
+        this.drawBottomBar(ctx, width, height);
+        this.drawTurnBadge(ctx, width);
         ctx.restore();
     }
     drawTopBar(ctx, width) {
-        const h = 40;
-        const p = this.padding;
-        // Fondo
-        ctx.fillStyle = `rgba(15,23,42,${this.panelAlpha})`;
+        const h = 42;
+        const p = 12;
+        ctx.fillStyle = 'rgba(15,23,42,0.92)';
         ctx.fillRect(0, 0, width, h);
-        ctx.strokeStyle = 'rgba(255,255,255,0.15)';
+        ctx.strokeStyle = 'rgba(255,255,255,0.12)';
         ctx.lineWidth = 1;
         ctx.beginPath();
         ctx.moveTo(0, h);
         ctx.lineTo(width, h);
         ctx.stroke();
-        // Recursos
+        if (!this.state)
+            return;
+        const player = this.state.currentPlayer;
+        const tribe = player.tribe;
+        ctx.fillStyle = tribe.color;
+        ctx.beginPath();
+        ctx.arc(p + 10, h / 2, 8, 0, Math.PI * 2);
+        ctx.fill();
         ctx.fillStyle = '#e2e8f0';
-        const resources = this.state.resources;
-        let x = p;
-        const items = Object.entries(resources);
-        for (const [name, val] of items) {
-            const label = `${name}: ${val}`;
-            ctx.fillText(label, x, h / 2);
-            x += ctx.measureText(label).width + 24;
+        ctx.font = 'bold 13px sans-serif';
+        ctx.textAlign = 'left';
+        ctx.fillText(`${player.name} — ${tribe.name}`, p + 26, h / 2);
+        const res = player.resources;
+        ctx.font = '12px sans-serif';
+        let x = p + 26 + ctx.measureText(`${player.name} — ${tribe.name}`).width + 32;
+        const items = [
+            { label: `⭐ ${res.stars}`, color: '#FFD600' },
+            { label: `🌲 ${res.wood}`, color: '#66BB6A' },
+            { label: `🪨 ${res.stone}`, color: '#90A4AE' },
+            { label: `🍎 ${res.fruits}`, color: '#EF5350' },
+            { label: `🐟 ${res.fish}`, color: '#42A5F5' },
+        ];
+        for (const item of items) {
+            ctx.fillStyle = item.color;
+            ctx.fillText(item.label, x, h / 2);
+            x += ctx.measureText(item.label).width + 20;
         }
-        if (items.length === 0) {
-            ctx.fillText('Sin recursos visibles', x, h / 2);
-        }
+        // Unidades y ciudades
+        ctx.fillStyle = '#94a3b8';
+        ctx.fillText(`⚔ ${player.units.length}  🏛 ${player.cities.length}`, x, h / 2);
     }
     drawSidePanel(ctx, width, height) {
-        const w = 180;
-        const top = 48;
-        const p = this.padding;
-        // Panel
-        ctx.fillStyle = `rgba(15,23,42,${this.panelAlpha})`;
-        ctx.fillRect(width - w, top, w, height - top - this.minimapSize - 8);
-        ctx.strokeStyle = 'rgba(255,255,255,0.15)';
+        const w = 200;
+        const top = 50;
+        const p = 12;
+        ctx.fillStyle = 'rgba(15,23,42,0.90)';
+        ctx.fillRect(width - w, top, w, height - top - 100);
+        ctx.strokeStyle = 'rgba(255,255,255,0.10)';
         ctx.lineWidth = 1;
-        ctx.strokeRect(width - w, top, w, height - top - this.minimapSize - 8);
+        ctx.strokeRect(width - w, top, w, height - top - 100);
+        if (!this.state)
+            return;
+        let y = top + p + 8;
         ctx.fillStyle = '#e2e8f0';
-        let y = top + p + 10;
-        // Título selección
-        if (this.state.selectedHex) {
-            const { q, r } = this.state.selectedHex;
-            ctx.font = 'bold 14px sans-serif';
-            ctx.fillText(`Hex (${q},${r})`, width - w + p, y);
-            y += 24;
-            // Acciones disponibles
-            ctx.font = '12px sans-serif';
-            ctx.fillStyle = '#94a3b8';
-            ctx.fillText('Acciones:', width - w + p, y);
-            y += 18;
-            ctx.fillStyle = '#e2e8f0';
-            for (const action of this.state.availableActions) {
-                // Fondo de botón sutil
-                ctx.fillStyle = 'rgba(255,255,255,0.08)';
-                const btnH = 26;
-                ctx.fillRect(width - w + p, y - 10, w - p * 2, btnH);
-                ctx.strokeStyle = 'rgba(255,255,255,0.12)';
-                ctx.strokeRect(width - w + p, y - 10, w - p * 2, btnH);
-                ctx.fillStyle = '#e2e8f0';
-                ctx.fillText(`▸ ${action}`, width - w + p + 6, y + 3);
-                y += 34;
+        ctx.font = 'bold 13px sans-serif';
+        ctx.textAlign = 'left';
+        // Info selección
+        if (this.state.selectedUnitId) {
+            const unit = this.state.gameState.players[this.state.currentPlayer.id]?.units.find(u => u.id === this.state.selectedUnitId);
+            if (unit) {
+                const def = { name: 'Unidad', attack: 0, defense: 0, movement: 0 }; // simplificado
+                ctx.fillText(`Unidad seleccionada`, width - w + p, y);
+                y += 22;
+                ctx.font = '11px sans-serif';
+                ctx.fillStyle = '#94a3b8';
+                ctx.fillText(`Vida: ${unit.health}/${unit.maxHealth}`, width - w + p, y);
+                y += 18;
+                ctx.fillText(`Mov: ${unit.movementRemaining}`, width - w + p, y);
+                y += 22;
             }
-            if (this.state.availableActions.length === 0) {
-                ctx.fillStyle = '#64748b';
-                ctx.fillText('Ninguna', width - w + p + 6, y + 3);
-                y += 20;
+        }
+        else if (this.state.selectedCityId) {
+            const city = this.state.gameState.players[this.state.currentPlayer.id]?.cities.find(c => c.id === this.state.selectedCityId);
+            if (city) {
+                ctx.fillText(city.name, width - w + p, y);
+                y += 22;
+                ctx.font = '11px sans-serif';
+                ctx.fillStyle = '#94a3b8';
+                ctx.fillText(`Nivel ${city.level} — ${city.population} pob`, width - w + p, y);
+                y += 18;
+                ctx.fillText(`Ingreso: ${city.level * 2 + city.population}⭐`, width - w + p, y);
+                y += 22;
+                // Botón entrenar
+                if (this.state.phase === TurnPhase.BUILD) {
+                    this.drawButton(ctx, width - w + p, y, w - p * 2, 28, 'Entrenar Guerrero', 'train_warrior');
+                    y += 36;
+                }
             }
         }
         else {
-            ctx.font = '13px sans-serif';
             ctx.fillStyle = '#64748b';
-            ctx.fillText('Selecciona un hex', width - w + p, y);
+            ctx.font = '12px sans-serif';
+            ctx.fillText('Selecciona unidad o ciudad', width - w + p, y);
+            y += 20;
+        }
+        // Botón fundar ciudad (si unidad exploradora seleccionada)
+        if (this.state.phase === TurnPhase.BUILD && this.state.selectedUnitId) {
+            const unit = this.state.gameState.players[this.state.currentPlayer.id]?.units.find(u => u.id === this.state.selectedUnitId);
+            if (unit && unit.type === 'explorer') {
+                this.drawButton(ctx, width - w + p, y, w - p * 2, 28, 'Fundar Ciudad (5⭐)', 'found_city');
+                y += 36;
+            }
         }
     }
-    drawMinimap(ctx, width, height) {
-        const size = this.minimapSize;
-        const x = width - size - this.padding;
-        const y = height - size - this.padding;
-        // Fondo
-        ctx.fillStyle = `rgba(15,23,42,${this.panelAlpha})`;
-        ctx.fillRect(x, y, size, size);
-        ctx.strokeStyle = 'rgba(255,255,255,0.15)';
+    drawBottomBar(ctx, width, height) {
+        const h = 90;
+        const p = 12;
+        const y = height - h;
+        ctx.fillStyle = 'rgba(15,23,42,0.92)';
+        ctx.fillRect(0, y, width, h);
+        ctx.strokeStyle = 'rgba(255,255,255,0.10)';
         ctx.lineWidth = 1;
-        ctx.strokeRect(x, y, size, size);
-        // Marco de vista de cámara (placeholder: centrado)
-        const cam = this.camera.getState();
-        const inner = size - 8;
-        const vpW = inner / (cam.zoom * 2);
-        const vpH = inner / (cam.zoom * 2);
-        const vpX = x + 4 + (inner - vpW) / 2;
-        const vpY = y + 4 + (inner - vpH) / 2;
-        ctx.strokeStyle = 'rgba(255,255,255,0.6)';
-        ctx.lineWidth = 1.5;
-        ctx.strokeRect(vpX, vpY, vpW, vpH);
-        ctx.fillStyle = '#94a3b8';
-        ctx.font = '10px sans-serif';
-        ctx.textAlign = 'center';
-        ctx.fillText('minimapa', x + size / 2, y + size / 2);
+        ctx.beginPath();
+        ctx.moveTo(0, y);
+        ctx.lineTo(width, y);
+        ctx.stroke();
+        // Log de eventos
+        ctx.font = '11px sans-serif';
         ctx.textAlign = 'left';
+        let ly = y + 16;
+        for (const msg of this.logMessages) {
+            ctx.fillStyle = '#94a3b8';
+            ctx.fillText(`› ${msg}`, p, ly);
+            ly += 16;
+        }
+        // Botón fin de turno / siguiente fase
+        const btnW = 120;
+        const btnH = 32;
+        const btnX = width - btnW - p;
+        const btnY = y + (h - btnH) / 2;
+        if (this.state?.isHumanTurn) {
+            const label = this.state.phase === TurnPhase.END ? 'Fin de Turno' : 'Siguiente Fase';
+            this.drawButton(ctx, btnX, btnY, btnW, btnH, label, 'advance');
+        }
+        else {
+            ctx.fillStyle = '#64748b';
+            ctx.font = '12px sans-serif';
+            ctx.textAlign = 'center';
+            ctx.fillText('Turno del oponente...', btnX + btnW / 2, btnY + btnH / 2);
+            ctx.textAlign = 'left';
+        }
     }
-    drawTurnIndicator(ctx, width) {
-        const turn = this.state.turn;
-        const label = `Turno ${turn}`;
-        ctx.font = 'bold 14px sans-serif';
+    drawTurnBadge(ctx, width) {
+        if (!this.state)
+            return;
+        const label = `Turno ${this.state.gameState.currentTurn} — ${this.phaseLabel(this.state.phase)}`;
+        ctx.font = 'bold 13px sans-serif';
         const tw = ctx.measureText(label).width;
-        const x = (width - tw) / 2;
-        const y = 64;
-        // Badge
-        const pad = 8;
-        ctx.fillStyle = `rgba(15,23,42,${this.panelAlpha})`;
-        ctx.fillRect(x - pad, y - 12, tw + pad * 2, 24);
+        const pad = 10;
+        const h = 26;
+        const x = (width - tw) / 2 - pad;
+        const y = 52;
+        ctx.fillStyle = 'rgba(15,23,42,0.90)';
+        ctx.fillRect(x, y, tw + pad * 2, h);
         ctx.strokeStyle = 'rgba(255,255,255,0.15)';
         ctx.lineWidth = 1;
-        ctx.strokeRect(x - pad, y - 12, tw + pad * 2, 24);
+        ctx.strokeRect(x, y, tw + pad * 2, h);
         ctx.fillStyle = '#e2e8f0';
         ctx.textAlign = 'center';
-        ctx.fillText(label, width / 2, y);
+        ctx.fillText(label, width / 2, y + h / 2 + 1);
         ctx.textAlign = 'left';
+    }
+    drawButton(ctx, x, y, w, h, text, action, data) {
+        ctx.fillStyle = 'rgba(255,255,255,0.10)';
+        ctx.fillRect(x, y, w, h);
+        ctx.strokeStyle = 'rgba(255,255,255,0.20)';
+        ctx.lineWidth = 1;
+        ctx.strokeRect(x, y, w, h);
+        ctx.fillStyle = '#e2e8f0';
+        ctx.font = '12px sans-serif';
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        ctx.fillText(text, x + w / 2, y + h / 2);
+        ctx.textAlign = 'left';
+        this.buttons.push({ x, y, w, h, action, data });
+    }
+    phaseLabel(phase) {
+        const labels = {
+            [TurnPhase.INCOME]: 'Ingresos',
+            [TurnPhase.TECHNOLOGY]: 'Tecnología',
+            [TurnPhase.MOVE]: 'Movimiento',
+            [TurnPhase.COMBAT]: 'Combate',
+            [TurnPhase.BUILD]: 'Construcción',
+            [TurnPhase.END]: 'Fin',
+        };
+        return labels[phase] ?? phase;
     }
 }
