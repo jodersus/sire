@@ -731,42 +731,47 @@ export class GameController {
     const player = getCurrentPlayer(this.gameState);
     if ((player as any).isHuman) return;
 
-    // Fase tecnología: investigar primera disponible
-    if (this.gameState.currentPhase === TurnPhase.TECHNOLOGY) {
-      const available = getAvailableTechs(player.unlockedTechs);
-      for (const tech of available) {
-        if (this.researchTech(tech.id)) break;
-      }
-      this.advancePhase();
-    }
-
-    // Fase movimiento: mover unidades
-    if (this.gameState.currentPhase === TurnPhase.MOVE || this.gameState.currentPhase === TurnPhase.COMBAT) {
-      const units = this.getUnitsOfPlayer(player.id).filter(u => u.movementRemaining > 0);
-      for (const unit of units) {
-        this.selectUnit(unit.id);
-        if (this.validAttacks.length > 0) {
-          // Atacar
-          const target = this.validAttacks[0];
-          this.clickHex(target.q, target.r);
-        } else if (this.validMoves.length > 0) {
-          // Mover hacia enemigo o explorar
-          const target = this.pickBestMove(unit, player);
-          if (target) this.clickHex(target.q, target.r);
+    switch (this.gameState.currentPhase) {
+      case TurnPhase.TECHNOLOGY: {
+        const available = getAvailableTechs(player.unlockedTechs);
+        for (const tech of available) {
+          if (this.researchTech(tech.id)) break;
         }
+        this.advancePhase();
+        setTimeout(() => this.runBotTurn(), 400);
+        break;
       }
-      this.advancePhase();
-    }
 
-    // Fase build: entrenar unidades
-    if (this.gameState.currentPhase === TurnPhase.BUILD) {
-      for (const city of player.cities) {
-        // Entrenar guerrero si hay recursos
-        if (canAfford(player.resources, getUnit(UnitType.WARRIOR).cost)) {
-          this.trainUnit(city.id, UnitType.WARRIOR);
+      case TurnPhase.MOVE:
+      case TurnPhase.COMBAT: {
+        const units = this.getUnitsOfPlayer(player.id).filter(u => u.movementRemaining > 0);
+        for (const unit of units) {
+          this.selectUnit(unit.id);
+          if (this.validAttacks.length > 0) {
+            const target = this.validAttacks[0];
+            this.clickHex(target.q, target.r);
+          } else if (this.validMoves.length > 0) {
+            const target = this.pickBestMove(unit, player);
+            if (target) this.clickHex(target.q, target.r);
+          }
         }
+        this.advancePhase();
+        setTimeout(() => this.runBotTurn(), 400);
+        break;
       }
-      this.advancePhase();
+
+      case TurnPhase.BUILD: {
+        for (const city of player.cities) {
+          if (canAfford(player.resources, getUnit(UnitType.WARRIOR).cost)) {
+            this.trainUnit(city.id, UnitType.WARRIOR);
+          }
+        }
+        this.advancePhase(); // END → nextPlayer → startTurn
+        break;
+      }
+
+      default:
+        break;
     }
   }
 
