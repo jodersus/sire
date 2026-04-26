@@ -236,7 +236,7 @@ function startGame(numBots: number, humanTribe: string): void {
   game = new GameController(28, 20, configs);
 
   const camera = new Camera({ x: 0, y: 0, zoom: 1.0 });
-  camera.setBounds(-2000, -2000, 2000, 2000);
+  camera.setBounds(-10000, -10000, 10000, 10000);
 
   hud = new HUD(camera);
 
