@@ -436,12 +436,10 @@ export class GameController {
         if (visited.has(nk)) continue;
 
         const terrain = this.getTerrainAt(n.q, n.r);
-        let terrainName = 'plain';
-        if (terrain === TerrainType.DEEP_WATER || terrain === TerrainType.SHALLOW_WATER) terrainName = 'water';
-        else if (terrain === TerrainType.MOUNTAIN || terrain === TerrainType.VOLCANO || terrain === TerrainType.HILL) terrainName = 'mountain';
-        else if (terrain === TerrainType.FOREST) terrainName = 'forest';
+        let terrainCategory = 'land';
+        if (terrain === TerrainType.DEEP_WATER || terrain === TerrainType.SHALLOW_WATER) terrainCategory = 'water';
 
-        if (!canTraverse(def, terrainName)) continue;
+        if (!canTraverse(def, terrainCategory)) continue;
 
         // Coste de movimiento
         let moveCost = 1;
