@@ -1,8 +1,8 @@
 // SphericalWorld.ts — Wrap-around esférico para hex grid
 // Si sales por un borde, apareces por el opuesto.
 
-import { HexGrid } from "./HexGrid.ts";
-import type { AxialCoord } from "./HexGrid.ts";
+import { HexGrid } from "./HexGrid.js";
+import type { AxialCoord } from "./HexGrid.js";
 
 export class SphericalWorld extends HexGrid {
   /**

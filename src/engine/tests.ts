@@ -4,9 +4,9 @@
 import assert from "node:assert";
 import test from "node:test";
 
-import { Entity, Registry, World } from "./ECS.ts";
-import { HexGrid, AXIAL_DIRECTIONS } from "./HexGrid.ts";
-import { SphericalWorld } from "./SphericalWorld.ts";
+import { Entity, Registry, World } from "./ECS.js";
+import { HexGrid, AXIAL_DIRECTIONS } from "./HexGrid.js";
+import { SphericalWorld } from "./SphericalWorld.js";
 import {
   TerrainType,
   TileFactory,
@@ -14,8 +14,8 @@ import {
   CoordComponent,
   ResourceComponent,
   OccupantComponent,
-} from "./Tile.ts";
-import { MapGenerator } from "./MapGenerator.ts";
+} from "./Tile.js";
+import { MapGenerator } from "./MapGenerator.js";
 
 // ─── ECS ─────────────────────────────────────────────────────────────────────
 
@@ -24,7 +24,7 @@ test("ECS: Entity add/get/has/remove", () => {
   const comp = { __type: "health", value: 100 };
   e.add(comp);
   assert.strictEqual(e.has("health"), true);
-  assert.strictEqual(e.get("health")?.value, 100);
+  assert.strictEqual((e.get("health") as any)?.value, 100);
   e.remove("health");
   assert.strictEqual(e.has("health"), false);
 });

@@ -1,8 +1,8 @@
 // Tile.ts — Entidad tile con componentes
 // Cada tile del mapa es una entidad ECS con componentes específicos.
 
-import { Entity, Registry } from "./ECS.ts";
-import type { Component, EntityId } from "./ECS.ts";
+import { Entity, Registry } from "./ECS.js";
+import type { Component, EntityId } from "./ECS.js";
 
 /** Tipos de terreno disponibles. */
 export const TerrainType = {

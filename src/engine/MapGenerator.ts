@@ -1,9 +1,9 @@
 // MapGenerator.ts — Generación procedural básica de mapa
 // Crea un mundo con terrenos variados usando ruido simple (sin deps externas).
 
-import { Registry } from "./ECS.ts";
-import { TerrainType, TileFactory } from "./Tile.ts";
-import { SphericalWorld } from "./SphericalWorld.ts";
+import { Registry } from "./ECS.js";
+import { TerrainType, TileFactory } from "./Tile.js";
+import { SphericalWorld } from "./SphericalWorld.js";
 
 /** Semilla de ruido: hash 2D + fbm para reproducibilidad. */
 class SimpleNoise {
@@ -122,7 +122,7 @@ export class MapGenerator {
   }
 
   private assignResources(
-    res: import("./Tile.ts").ResourceComponent,
+    res: import("./Tile.js").ResourceComponent,
     terrain: TerrainType,
     moisture: number
   ): void {
