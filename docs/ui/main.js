@@ -271,6 +271,9 @@ function startGame(numBots, humanTribe) {
                 if (game.selectedUnitId)
                     game.foundCity(game.selectedUnitId);
             }
+            else if (btn.action === 'research_tech' && btn.data) {
+                game.researchTech(btn.data);
+            }
         }
     });
     // State change callback

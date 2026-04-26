@@ -294,6 +294,8 @@ function startGame(numBots: number, humanTribe: string): void {
         if (game.selectedCityId) game.trainUnit(game.selectedCityId, UnitType.WARRIOR);
       } else if (btn.action === 'found_city') {
         if (game.selectedUnitId) game.foundCity(game.selectedUnitId);
+      } else if (btn.action === 'research_tech' && btn.data) {
+        game.researchTech(btn.data);
       }
     }
   });

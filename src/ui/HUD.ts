@@ -5,6 +5,7 @@
 
 import { Camera } from './Camera.js';
 import { TurnPhase } from '../game/GameState.js';
+import { getAvailableTechs, TECHNOLOGIES } from '../game/Technologies.js';
 import type { GameControllerState } from '../game/GameController.js';
 
 export class HUD {
@@ -170,6 +171,30 @@ export class HUD {
       ctx.font = '12px sans-serif';
       ctx.fillText('Selecciona unidad o ciudad', width - w + p, y);
       y += 20;
+    }
+
+    // Tecnologías disponibles
+    if (this.state.phase === TurnPhase.TECHNOLOGY) {
+      ctx.fillStyle = '#e2e8f0';
+      ctx.font = 'bold 12px sans-serif';
+      ctx.fillText('Investigar:', width - w + p, y);
+      y += 18;
+
+      const techs = getAvailableTechs(this.state.currentPlayer.unlockedTechs);
+
+      for (const tech of techs.slice(0, 4)) {
+        const canAfford = this.state.currentPlayer.resources.stars >= tech.cost;
+        this.drawButton(ctx, width - w + p, y, w - p * 2, 24,
+          `${tech.name} (${tech.cost}⭐)`,
+          'research_tech', tech.id);
+        y += 30;
+      }
+      if (techs.length === 0) {
+        ctx.fillStyle = '#64748b';
+        ctx.font = '11px sans-serif';
+        ctx.fillText('Nada disponible', width - w + p, y);
+        y += 18;
+      }
     }
 
     // Botón fundar ciudad (si unidad exploradora seleccionada)
