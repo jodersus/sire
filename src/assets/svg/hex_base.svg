@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 86.6">
+  <!-- Hexágono base flat-top, reutilizable para todos los terrenos -->
+  <polygon points="25,0 75,0 100,43.3 75,86.6 25,86.6 0,43.3"
+           fill="#7CB342" stroke="#263238" stroke-width="2" stroke-linejoin="round"/>
+</svg>

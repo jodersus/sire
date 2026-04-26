@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 86.6">
+  <!-- Fondo desierto -->
+  <polygon points="25,0 75,0 100,43.3 75,86.6 25,86.6 0,43.3" fill="#FDD835"/>
+  <!-- Dunas low-poly -->
+  <polygon points="25,0 50,15 75,0" fill="#FFEE58"/>
+  <polygon points="0,43.3 25,20 50,35 25,50" fill="#FBC02D"/>
+  <polygon points="100,43.3 75,20 50,35 75,50" fill="#FBC02D"/>
+  <polygon points="25,50 50,35 75,50 50,70" fill="#F9A825"/>
+  <polygon points="25,86.6 50,70 75,86.6" fill="#F57F17"/>
+  <!-- Detalle: oasis pequeño -->
+  <ellipse cx="35" cy="60" rx="8" ry="4" fill="#29B6F6" opacity="0.7"/>
+  <circle cx="35" cy="55" r="2" fill="#43A047"/>
+  <!-- Stroke -->
+  <polygon points="25,0 75,0 100,43.3 75,86.6 25,86.6 0,43.3"
+           fill="none" stroke="#263238" stroke-width="2" stroke-linejoin="round"/>
+</svg>

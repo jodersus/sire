@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
+  <!-- Jinete low-poly flat 2D -->
+  <!-- Caballo: cuerpo -->
+  <polygon points="8,16 12,10 20,10 24,16 20,22 12,22" fill="currentColor"/>
+  <!-- Caballo: cabeza -->
+  <polygon points="20,10 26,6 28,12 24,14" fill="currentColor"/>
+  <!-- Caballo: patas delanteras -->
+  <polygon points="20,22 20,28 18,28 18,22" fill="currentColor"/>
+  <polygon points="24,22 24,28 22,28 22,22" fill="currentColor"/>
+  <!-- Caballo: patas traseras -->
+  <polygon points="12,22 12,28 10,28 10,22" fill="currentColor"/>
+  <polygon points="16,22 16,28 14,28 14,22" fill="currentColor"/>
+  <!-- Jinete: cuerpo -->
+  <polygon points="14,12 16,6 18,12 16,16" fill="currentColor"/>
+  <!-- Jinete: cabeza -->
+  <circle cx="16" cy="5" r="2.5" fill="currentColor"/>
+</svg>

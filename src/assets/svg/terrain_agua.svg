@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 86.6">
+  <!-- Fondo agua -->
+  <polygon points="25,0 75,0 100,43.3 75,86.6 25,86.6 0,43.3" fill="#29B6F6"/>
+  <!-- Ondas low-poly -->
+  <polygon points="0,43.3 25,0 50,20 25,40" fill="#4FC3F7"/>
+  <polygon points="25,0 75,0 50,20" fill="#4FC3F7"/>
+  <polygon points="75,0 100,43.3 50,20" fill="#039BE5"/>
+  <polygon points="100,43.3 75,86.6 50,60" fill="#039BE5"/>
+  <polygon points="75,86.6 25,86.6 50,60" fill="#0288D1"/>
+  <polygon points="25,86.6 0,43.3 50,60" fill="#0288D1"/>
+  <!-- Reflejo central -->
+  <polygon points="35,35 65,35 50,55" fill="#81D4FA" opacity="0.6"/>
+  <!-- Stroke -->
+  <polygon points="25,0 75,0 100,43.3 75,86.6 25,86.6 0,43.3"
+           fill="none" stroke="#263238" stroke-width="2" stroke-linejoin="round"/>
+</svg>

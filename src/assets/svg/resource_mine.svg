@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
+  <!-- Mina / Mineral -->
+  <!-- Montaña pequeña -->
+  <polygon points="16,6 26,26 6,26" fill="#78909C"/>
+  <polygon points="16,6 21,16 16,20 11,16" fill="#B0BEC5"/>
+  <!-- Picos -->
+  <polygon points="16,6 18,12 16,14 14,12" fill="#ECEFF1"/>
+  <!-- Entrada de mina -->
+  <polygon points="12,26 20,26 18,20 14,20" fill="#37474F"/>
+  <circle cx="16" cy="23" r="2" fill="#102027"/>
+</svg>

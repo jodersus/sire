@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
+  <!-- Árbol estilizado low-poly -->
+  <!-- Tronco -->
+  <polygon points="14,28 18,28 17,20 15,20" fill="#6D4C41"/>
+  <!-- Copa: 3 triángulos -->
+  <polygon points="16,4 24,16 8,16" fill="#43A047"/>
+  <polygon points="16,10 26,22 6,22" fill="#66BB6A"/>
+  <polygon points="16,16 22,26 10,26" fill="#43A047"/>
+</svg>

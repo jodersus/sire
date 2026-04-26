@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 86.6">
+  <!-- Fondo base montaña -->
+  <polygon points="25,0 75,0 100,43.3 75,86.6 25,86.6 0,43.3" fill="#8D6E63"/>
+  <!-- Pico central low-poly -->
+  <polygon points="50,10 70,40 50,50 30,40" fill="#A1887F"/>
+  <polygon points="50,10 70,40 85,55 50,50" fill="#8D6E63"/>
+  <polygon points="50,10 30,40 15,55 50,50" fill="#6D4C41"/>
+  <!-- Peaks secundarios -->
+  <polygon points="20,35 35,50 20,60" fill="#6D4C41"/>
+  <polygon points="80,35 65,50 80,60" fill="#6D4C41"/>
+  <!-- Nieve en cumbre -->
+  <polygon points="50,10 58,25 50,30 42,25" fill="#ECEFF1"/>
+  <!-- Stroke -->
+  <polygon points="25,0 75,0 100,43.3 75,86.6 25,86.6 0,43.3"
+           fill="none" stroke="#263238" stroke-width="2" stroke-linejoin="round"/>
+</svg>

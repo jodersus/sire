@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
+  <!-- Estrella / Oro / Puntos -->
+  <polygon points="16,2 19,12 30,12 21,18 24,28 16,22 8,28 11,18 2,12 13,12"
+           fill="#FFD600" stroke="#F57F17" stroke-width="1" stroke-linejoin="round"/>
+</svg>
