@@ -5,8 +5,8 @@
  * con soporte para bonos de terreno, flanqueo y asedios.
  */
 
-import { UnitDefinition, UnitType, getUnit } from './Units';
-import { City, getCityDefense } from './City';
+import { UnitDefinition, UnitType, getUnit } from './Units.js';
+import { City, getCityDefense } from './City.js';
 
 /** Resultado de un combate */
 export interface CombatResult {

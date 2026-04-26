@@ -5,8 +5,8 @@
  * territorio y los edificios disponibles.
  */
 
-import { ResourcePouch, ResourceCost, addResources, calculateCityIncome } from './Resources';
-import { UnitType } from './Units';
+import { ResourcePouch, ResourceCost, addResources, calculateCityIncome } from './Resources.js';
+import { UnitType } from './Units.js';
 
 /** Nivel máximo de ciudad */
 export const MAX_CITY_LEVEL = 5;

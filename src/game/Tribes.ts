@@ -5,8 +5,8 @@
  * especial pasiva y una unidad inicial modificada.
  */
 
-import { UnitType } from './Units';
-import { ResourceCost } from './Resources';
+import { UnitType } from './Units.js';
+import { ResourceCost } from './Resources.js';
 
 export interface TribeAbility {
   name: string;

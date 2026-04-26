@@ -6,8 +6,8 @@
  * edificios, habilidades pasivas).
  */
 
-import { ResourceCost } from './Resources';
-import { UnitType } from './Units';
+import { ResourceCost } from './Resources.js';
+import { UnitType } from './Units.js';
 
 export interface Technology {
   id: string;

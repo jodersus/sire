@@ -1,16 +1,32 @@
 # sire
 
-_Juego en el explorador web._
+_Juego de estrategia por turnos, basado en explorador web._
 
-## Repositorio
+Inspirado en *The Battle of Polytopia*, con dos cambios fundamentales:
+- **Casillas hexagonales** en lugar de cuadradas
+- **Mundo esférico**: el tablero tiene wrap-around en ambos ejes
 
-- **GitHub:** `git@github.com:jodersus/sire.git` (privado)
-- **Deploy key:** configurada en `/root/.openclaw/workspace/proyectos/sire/.deploy_key`
-- **Local:** `/root/.openclaw/workspace/proyectos/sire/`
+## Stack Tecnológico
+
+- HTML5 Canvas / WebGL
+- TypeScript
+- Sin framework de UI externo (canvas nativo)
+
+## Estructura del Proyecto
+
+```
+src/
+├── engine/          ← Motor del juego (hex grid, mundo esférico, turnos)
+├── game/            ← Reglas, tribus, tecnologías, unidades
+├── ai/              ← Inteligencia de los PNJ
+├── ui/              ← Interfaz de usuario, renderizado, input
+├── assets/          ← Sprites, tilesets, audio
+└── main.ts          ← Punto de entrada
+```
 
 ## Estado
 
-Repo inicializado. README.md subido. Listo para desarrollo.
+En desarrollo. Fase 1: motor de hex grid + mundo esférico.
 
 ---
 _Última actualización: 2026-04-26_

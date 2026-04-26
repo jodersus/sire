@@ -5,7 +5,7 @@
  * costes de entrenamiento y capacidades especiales.
  */
 
-import { ResourceCost } from './Resources';
+import { ResourceCost } from './Resources.js';
 
 export enum UnitType {
   EXPLORER = 'explorer',

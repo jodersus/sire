@@ -5,11 +5,11 @@
  * de victoria y el flujo de fases del juego.
  */
 
-import { Tribe, TRIBES } from './Tribes';
-import { City, createCity, getCityIncome } from './City';
-import { UnitInstance } from './Combat';
-import { ResourcePouch, createEmptyPouch, addResources } from './Resources';
-import { Technology, TECHNOLOGIES } from './Technologies';
+import { Tribe, TRIBES } from './Tribes.js';
+import { City, createCity, getCityIncome } from './City.js';
+import { UnitInstance } from './Combat.js';
+import { ResourcePouch, createEmptyPouch, addResources } from './Resources.js';
+import { Technology, TECHNOLOGIES } from './Technologies.js';
 
 /** Identificador de jugador */
 export type PlayerId = string;
