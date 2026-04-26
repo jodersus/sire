@@ -5,6 +5,7 @@ build/
 *.log
 .env
 .env.local
+.env.*.local
 .DS_Store
 Thumbs.db
 .vscode/
@@ -18,3 +19,29 @@ coverage/
 temp/
 tmp/
 *.tmp
+
+# Security: never commit keys or secrets
+.deploy_key
+.deploy_key.pub
+.deploy_key_new
+.deploy_key_new.pub
+*.pem
+*.key
+id_*_*
+ssh-key*
+secrets/
+secrets.*
+*_secret*
+*secret*
+config.json
+auth.json
+tokens.json
+credentials.json
+credentials.*
+*.token
+*.password
+
+# Deploy artifacts
+docs/godot/
+*.wasm.original
+

@@ -20,6 +20,7 @@ export class InputHandler {
   private cells: Map<string, unknown> = new Map();
   private callbacks: InputCallbacks;
 
+  private isMouseDown = false;
   private dragging = false;
   private dragStartX = 0;
   private dragStartY = 0;
@@ -52,7 +53,7 @@ export class InputHandler {
     c.addEventListener('mousedown', this.onMouseDown);
     c.addEventListener('mousemove', this.onMouseMove);
     c.addEventListener('mouseup', this.onMouseUp);
-    c.addEventListener('mouseleave', this.onMouseUp);
+    c.addEventListener('mouseleave', this.onMouseLeave);
     c.addEventListener('wheel', this.onWheel, { passive: false });
     c.addEventListener('contextmenu', this.onContextMenu);
 
@@ -72,8 +73,9 @@ export class InputHandler {
 
   private onMouseDown = (e: MouseEvent): void => {
     if (e.button !== 0) return; // solo click izquierdo
-    const { x, y } = this.getMousePos(e);
+    this.isMouseDown = true;
     this.dragging = false;
+    const { x, y } = this.getMousePos(e);
     this.dragStartX = x;
     this.dragStartY = y;
     this.lastX = x;
@@ -83,14 +85,18 @@ export class InputHandler {
   private onMouseMove = (e: MouseEvent): void => {
     const { x, y } = this.getMousePos(e);
 
-    // Hover
+    // Hover (siempre activo)
     const world = this.camera.screenToWorld(x, y);
     const { q, r } = pixelToAxial(world.x, world.y);
     const cell = this.cells.get(`${q},${r}`);
     this.callbacks.onHexHover?.(q, r, cell);
 
+    // Solo procesar drag si el botón está presionado
+    if (!this.isMouseDown) return;
+
     // Drag pan
-    if (this.dragStartX !== this.lastX || this.dragStartY !== this.lastY || Math.hypot(x - this.dragStartX, y - this.dragStartY) > this.dragThreshold) {
+    const dist = Math.hypot(x - this.dragStartX, y - this.dragStartY);
+    if (dist > this.dragThreshold) {
       this.dragging = true;
     }
     if (this.dragging) {
@@ -103,7 +109,7 @@ export class InputHandler {
   };
 
   private onMouseUp = (e: MouseEvent): void => {
-    if (!this.dragging) {
+    if (!this.dragging && this.isMouseDown) {
       // Fue un click simple
       const { x, y } = this.getMousePos(e);
       const world = this.camera.screenToWorld(x, y);
@@ -111,9 +117,13 @@ export class InputHandler {
       const cell = this.cells.get(`${q},${r}`);
       this.callbacks.onHexClick?.(q, r, cell);
     }
+    this.isMouseDown = false;
     this.dragging = false;
-    this.dragStartX = this.lastX;
-    this.dragStartY = this.lastY;
+  };
+
+  private onMouseLeave = (): void => {
+    this.isMouseDown = false;
+    this.dragging = false;
   };
 
   private onWheel = (e: WheelEvent): void => {
@@ -186,7 +196,7 @@ export class InputHandler {
     c.removeEventListener('mousedown', this.onMouseDown);
     c.removeEventListener('mousemove', this.onMouseMove);
     c.removeEventListener('mouseup', this.onMouseUp);
-    c.removeEventListener('mouseleave', this.onMouseUp);
+    c.removeEventListener('mouseleave', this.onMouseLeave);
     c.removeEventListener('wheel', this.onWheel);
     c.removeEventListener('contextmenu', this.onContextMenu);
     c.removeEventListener('touchstart', this.onTouchStart);

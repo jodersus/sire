@@ -31,6 +31,12 @@ function setAuth(persistent) {
     catch { /* noop */ }
 }
 function showAuthScreen(onSuccess) {
+    // Limpiar auth previo para forzar re-login
+    try {
+        localStorage.removeItem(AUTH_KEY);
+        sessionStorage.removeItem(AUTH_KEY);
+    }
+    catch { /* noop */ }
     const container = document.getElementById('game-container');
     if (!container)
         return;

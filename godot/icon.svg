@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" width="128" height="128">
+  <rect width="128" height="128" rx="16" fill="#0f172a"/>
+  <polygon points="64,20 84,36 84,60 64,76 44,60 44,36" fill="#FFD54F" stroke="#FFA000" stroke-width="2"/>
+  <polygon points="64,52 84,68 84,92 64,108 44,92 44,68" fill="#1e293b" stroke="#FFD54F" stroke-width="2"/>
+  <text x="64" y="48" font-family="Arial, sans-serif" font-size="28" font-weight="bold" fill="#0f172a" text-anchor="middle" dominant-baseline="middle">S</text>
+</svg>

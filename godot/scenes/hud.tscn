@@ -1,0 +1,230 @@
+[gd_scene load_steps=7 format=3 uid="uid://c8q1g8y3khud00"]
+
+[ext_resource type="Script" path="res://scripts/hud.gd" id="1_hud00"]
+[ext_resource type="Theme" path="res://theme.tres" id="2_theme0"]
+[ext_resource type="Texture2D" path="res://assets/icons/star.svg" id="3_star"]
+[ext_resource type="Texture2D" path="res://assets/icons/population.svg" id="4_pop"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBox_topbar"]
+bg_color = Color(0.117647, 0.160784, 0.231373, 0.9)
+border_color = Color(1, 0.835294, 0.309804, 0.3)
+border_width_bottom = 2
+corner_radius_bottom_left = 8
+corner_radius_bottom_right = 8
+content_margin_left = 16
+content_margin_top = 8
+content_margin_right = 16
+content_margin_bottom = 8
+
+[sub_resource type="StyleBoxFlat" id="StyleBox_panel"]
+bg_color = Color(0.117647, 0.160784, 0.231373, 0.85)
+border_color = Color(1, 0.835294, 0.309804, 0.3)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+corner_radius_top_left = 8
+corner_radius_top_right = 8
+corner_radius_bottom_left = 8
+corner_radius_bottom_right = 8
+content_margin_left = 12
+content_margin_top = 12
+content_margin_right = 12
+content_margin_bottom = 12
+
+[node name="HUD" type="CanvasLayer"]
+script = ExtResource("1_hud00")
+
+[node name="TopBar" type="PanelContainer" parent="."]
+anchors_preset = 10
+anchor_right = 1.0
+offset_bottom = 60.0
+grow_horizontal = 2
+theme = ExtResource("2_theme0")
+theme_override_styles/panel = SubResource("StyleBox_topbar")
+
+[node name="ResourcesContainer" type="HBoxContainer" parent="TopBar"]
+layout_mode = 2
+theme_override_constants/separation = 24
+
+[node name="StarsContainer" type="HBoxContainer" parent="TopBar/ResourcesContainer"]
+layout_mode = 2
+theme_override_constants/separation = 6
+
+[node name="StarsIcon" type="TextureRect" parent="TopBar/ResourcesContainer/StarsContainer"]
+custom_minimum_size = Vector2(24, 24)
+layout_mode = 2
+texture = ExtResource("3_star")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="StarsValue" type="Label" parent="TopBar/ResourcesContainer/StarsContainer"]
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 0.835294, 0.309804, 1)
+theme_override_font_sizes/font_size = 20
+text = "0"
+vertical_alignment = 1
+
+[node name="PopContainer" type="HBoxContainer" parent="TopBar/ResourcesContainer"]
+layout_mode = 2
+theme_override_constants/separation = 6
+
+[node name="PopIcon" type="TextureRect" parent="TopBar/ResourcesContainer/PopContainer"]
+custom_minimum_size = Vector2(24, 24)
+layout_mode = 2
+texture = ExtResource("4_pop")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="PopValue" type="Label" parent="TopBar/ResourcesContainer/PopContainer"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.129412, 0.588235, 0.952941, 1)
+theme_override_font_sizes/font_size = 20
+text = "0"
+vertical_alignment = 1
+
+[node name="TurnContainer" type="HBoxContainer" parent="TopBar"]
+layout_mode = 2
+size_flags_horizontal = 3
+alignment = 1
+
+[node name="TurnLabel" type="Label" parent="TopBar/TurnContainer"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.580392, 0.639216, 0.721569, 1)
+theme_override_font_sizes/font_size = 14
+text = "Turno"
+vertical_alignment = 1
+
+[node name="TurnValue" type="Label" parent="TopBar/TurnContainer"]
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 0.835294, 0.309804, 1)
+theme_override_font_sizes/font_size = 24
+text = "1"
+vertical_alignment = 1
+
+[node name="PhaseContainer" type="HBoxContainer" parent="TopBar"]
+layout_mode = 2
+size_flags_horizontal = 3
+alignment = 2
+
+[node name="PhaseLabel" type="Label" parent="TopBar/PhaseContainer"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.580392, 0.639216, 0.721569, 1)
+theme_override_font_sizes/font_size = 14
+text = "Fase:"
+vertical_alignment = 1
+
+[node name="PhaseValue" type="Label" parent="TopBar/PhaseContainer"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.133333, 0.772549, 0.333333, 1)
+theme_override_font_sizes/font_size = 16
+text = "Ingreso"
+vertical_alignment = 1
+
+[node name="PauseButton" type="Button" parent="TopBar"]
+custom_minimum_size = Vector2(40, 40)
+layout_mode = 2
+size_flags_horizontal = 8
+theme_override_font_sizes/font_size = 20
+text = "II"
+
+[node name="MinimapPanel" type="PanelContainer" parent="."]
+anchors_preset = 3
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -180.0
+offset_top = -180.0
+offset_right = -16.0
+offset_bottom = -76.0
+grow_horizontal = 0
+grow_vertical = 0
+theme = ExtResource("2_theme0")
+theme_override_styles/panel = SubResource("StyleBox_panel")
+
+[node name="MinimapTitle" type="Label" parent="MinimapPanel"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.580392, 0.639216, 0.721569, 1)
+theme_override_font_sizes/font_size = 12
+text = "Minimapa"
+horizontal_alignment = 1
+
+[node name="MinimapViewport" type="ColorRect" parent="MinimapPanel"]
+custom_minimum_size = Vector2(140, 140)
+layout_mode = 2
+color = Color(0.0588235, 0.0901961, 0.164706, 1)
+
+[node name="PhaseBar" type="PanelContainer" parent="."]
+anchors_preset = 12
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = -60.0
+offset_bottom = 0.0
+grow_horizontal = 2
+grow_vertical = 0
+theme = ExtResource("2_theme0")
+theme_override_styles/panel = SubResource("StyleBox_topbar")
+
+[node name="PhaseButtons" type="HBoxContainer" parent="PhaseBar"]
+layout_mode = 2
+theme_override_constants/separation = 12
+alignment = 1
+
+[node name="ActionPanel" type="PanelContainer" parent="."]
+anchors_preset = 9
+anchor_bottom = 1.0
+offset_left = 16.0
+offset_top = 76.0
+offset_right = 220.0
+offset_bottom = -76.0
+grow_vertical = 2
+theme = ExtResource("2_theme0")
+theme_override_styles/panel = SubResource("StyleBox_panel")
+
+[node name="ActionContent" type="VBoxContainer" parent="ActionPanel"]
+layout_mode = 2
+theme_override_constants/separation = 12
+
+[node name="ActionTitle" type="Label" parent="ActionPanel/ActionContent"]
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 0.835294, 0.309804, 1)
+theme_override_font_sizes/font_size = 18
+text = "Acciones"
+horizontal_alignment = 1
+
+[node name="HSeparator" type="HSeparator" parent="ActionPanel/ActionContent"]
+layout_mode = 2
+
+[node name="ActionList" type="VBoxContainer" parent="ActionPanel/ActionContent"]
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="EventLogPanel" type="PanelContainer" parent="."]
+anchors_preset = 2
+anchor_top = 1.0
+anchor_bottom = 1.0
+offset_left = 16.0
+offset_top = -220.0
+offset_right = 300.0
+offset_bottom = -76.0
+grow_vertical = 0
+theme = ExtResource("2_theme0")
+theme_override_styles/panel = SubResource("StyleBox_panel")
+
+[node name="EventLogTitle" type="Label" parent="EventLogPanel"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.580392, 0.639216, 0.721569, 1)
+theme_override_font_sizes/font_size = 12
+text = "Registro de Eventos"
+horizontal_alignment = 1
+
+[node name="EventLogContent" type="RichTextLabel" parent="EventLogPanel"]
+custom_minimum_size = Vector2(0, 120)
+layout_mode = 2
+theme_override_font_sizes/normal_font_size = 12
+bbcode_enabled = true
+scroll_following = true
+
+[connection signal="pressed" from="TopBar/PauseButton" to="." method="_on_pause_pressed"]

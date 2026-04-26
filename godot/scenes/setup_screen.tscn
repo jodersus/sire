@@ -1,0 +1,239 @@
+[gd_scene load_steps=3 format=3 uid="uid://c8q1g8y3setup0"]
+
+[ext_resource type="Script" path="res://scripts/setup_screen.gd" id="1_setup0"]
+[ext_resource type="Theme" path="res://theme.tres" id="2_theme0"]
+
+[node name="SetupScreen" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_setup0")
+
+[node name="BG" type="ColorRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.0588235, 0.0901961, 0.164706, 1)
+
+[node name="MainContainer" type="VBoxContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 40.0
+offset_top = 40.0
+offset_right = -40.0
+offset_bottom = -40.0
+grow_horizontal = 2
+grow_vertical = 2
+theme = ExtResource("2_theme0")
+theme_override_constants/separation = 24
+
+[node name="TitleLabel" type="Label" parent="MainContainer"]
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 0.835294, 0.309804, 1)
+theme_override_font_sizes/font_size = 36
+text = "Nueva Partida"
+horizontal_alignment = 1
+
+[node name="ContentContainer" type="HBoxContainer" parent="MainContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_constants/separation = 32
+alignment = 1
+
+[node name="TribeSection" type="VBoxContainer" parent="MainContainer/ContentContainer"]
+custom_minimum_size = Vector2(300, 0)
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 16
+alignment = 1
+
+[node name="SectionLabel" type="Label" parent="MainContainer/ContentContainer/TribeSection"]
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 0.835294, 0.309804, 1)
+theme_override_font_sizes/font_size = 20
+text = "Selecciona tu Tribu"
+horizontal_alignment = 1
+
+[node name="TribePreview" type="PanelContainer" parent="MainContainer/ContentContainer/TribeSection"]
+custom_minimum_size = Vector2(200, 200)
+layout_mode = 2
+size_flags_horizontal = 4
+
+[node name="PreviewColor" type="ColorRect" parent="MainContainer/ContentContainer/TribeSection/TribePreview"]
+layout_mode = 2
+color = Color(0.956863, 0.815686, 0.247059, 1)
+
+[node name="PreviewIcon" type="Label" parent="MainContainer/ContentContainer/TribeSection/TribePreview"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.0588235, 0.0901961, 0.164706, 1)
+theme_override_font_sizes/font_size = 80
+text = "S"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="TribeNav" type="HBoxContainer" parent="MainContainer/ContentContainer/TribeSection"]
+layout_mode = 2
+alignment = 1
+
+[node name="PrevTribe" type="Button" parent="MainContainer/ContentContainer/TribeSection/TribeNav"]
+custom_minimum_size = Vector2(50, 40)
+layout_mode = 2
+text = "<"
+
+[node name="TribeInfo" type="VBoxContainer" parent="MainContainer/ContentContainer/TribeSection"]
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="TribeName" type="Label" parent="MainContainer/ContentContainer/TribeSection/TribeInfo"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 24
+text = "Solaris"
+horizontal_alignment = 1
+
+[node name="TribeAbility" type="Label" parent="MainContainer/ContentContainer/TribeSection/TribeInfo"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.580392, 0.639216, 0.721569, 1)
+theme_override_font_sizes/font_size = 14
+text = "Habilidad: -20% coste tecnologías"
+horizontal_alignment = 1
+autowrap_mode = 3
+
+[node name="TribeUnit" type="Label" parent="MainContainer/ContentContainer/TribeSection/TribeInfo"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.580392, 0.639216, 0.721569, 1)
+theme_override_font_sizes/font_size = 14
+text = "Unidad inicial: Explorador"
+horizontal_alignment = 1
+
+[node name="NextTribe" type="Button" parent="MainContainer/ContentContainer/TribeSection/TribeNav"]
+custom_minimum_size = Vector2(50, 40)
+layout_mode = 2
+text = ">"
+
+[node name="VSeparator" type="VSeparator" parent="MainContainer/ContentContainer"]
+layout_mode = 2
+
+[node name="SettingsSection" type="VBoxContainer" parent="MainContainer/ContentContainer"]
+custom_minimum_size = Vector2(300, 0)
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 24
+alignment = 1
+
+[node name="BotsSection" type="VBoxContainer" parent="MainContainer/ContentContainer/SettingsSection"]
+layout_mode = 2
+theme_override_constants/separation = 12
+
+[node name="BotsLabel" type="Label" parent="MainContainer/ContentContainer/SettingsSection/BotsSection"]
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 0.835294, 0.309804, 1)
+theme_override_font_sizes/font_size = 20
+text = "Número de Bots"
+horizontal_alignment = 1
+
+[node name="BotsRow" type="HBoxContainer" parent="MainContainer/ContentContainer/SettingsSection/BotsSection"]
+layout_mode = 2
+alignment = 1
+
+[node name="BotsDecrease" type="Button" parent="MainContainer/ContentContainer/SettingsSection/BotsSection/BotsRow"]
+custom_minimum_size = Vector2(50, 40)
+layout_mode = 2
+text = "-"
+
+[node name="BotsValue" type="Label" parent="MainContainer/ContentContainer/SettingsSection/BotsSection/BotsRow"]
+custom_minimum_size = Vector2(60, 0)
+layout_mode = 2
+theme_override_font_sizes/font_size = 28
+text = "2"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="BotsIncrease" type="Button" parent="MainContainer/ContentContainer/SettingsSection/BotsSection/BotsRow"]
+custom_minimum_size = Vector2(50, 40)
+layout_mode = 2
+text = "+"
+
+[node name="MapSection" type="VBoxContainer" parent="MainContainer/ContentContainer/SettingsSection"]
+layout_mode = 2
+theme_override_constants/separation = 12
+
+[node name="MapLabel" type="Label" parent="MainContainer/ContentContainer/SettingsSection/MapSection"]
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 0.835294, 0.309804, 1)
+theme_override_font_sizes/font_size = 20
+text = "Tamaño del Mapa"
+horizontal_alignment = 1
+
+[node name="MapRow" type="VBoxContainer" parent="MainContainer/ContentContainer/SettingsSection/MapSection"]
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="MapNav" type="HBoxContainer" parent="MainContainer/ContentContainer/SettingsSection/MapSection/MapRow"]
+layout_mode = 2
+alignment = 1
+
+[node name="PrevMap" type="Button" parent="MainContainer/ContentContainer/SettingsSection/MapSection/MapRow/MapNav"]
+custom_minimum_size = Vector2(50, 40)
+layout_mode = 2
+text = "<"
+
+[node name="MapName" type="Label" parent="MainContainer/ContentContainer/SettingsSection/MapSection/MapRow/MapNav"]
+custom_minimum_size = Vector2(120, 0)
+layout_mode = 2
+theme_override_font_sizes/font_size = 22
+text = "Mediano"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="NextMap" type="Button" parent="MainContainer/ContentContainer/SettingsSection/MapSection/MapRow/MapNav"]
+custom_minimum_size = Vector2(50, 40)
+layout_mode = 2
+text = ">"
+
+[node name="MapSize" type="Label" parent="MainContainer/ContentContainer/SettingsSection/MapSection/MapRow"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.580392, 0.639216, 0.721569, 1)
+theme_override_font_sizes/font_size = 16
+text = "15x15"
+horizontal_alignment = 1
+
+[node name="MapDesc" type="Label" parent="MainContainer/ContentContainer/SettingsSection/MapSection/MapRow"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.580392, 0.639216, 0.721569, 1)
+theme_override_font_sizes/font_size = 14
+text = "Equilibrado"
+horizontal_alignment = 1
+
+[node name="ButtonRow" type="HBoxContainer" parent="MainContainer"]
+layout_mode = 2
+theme_override_constants/separation = 16
+alignment = 1
+
+[node name="BackButton" type="Button" parent="MainContainer/ButtonRow"]
+custom_minimum_size = Vector2(140, 50)
+layout_mode = 2
+theme_override_font_sizes/font_size = 18
+text = "Volver"
+
+[node name="StartButton" type="Button" parent="MainContainer/ButtonRow"]
+custom_minimum_size = Vector2(200, 50)
+layout_mode = 2
+theme_override_font_sizes/font_size = 20
+text = "Comenzar"
+
+[connection signal="pressed" from="MainContainer/ContentContainer/TribeSection/TribeNav/PrevTribe" to="." method="_on_prev_tribe_pressed"]
+[connection signal="pressed" from="MainContainer/ContentContainer/TribeSection/TribeNav/NextTribe" to="." method="_on_next_tribe_pressed"]
+[connection signal="pressed" from="MainContainer/ContentContainer/SettingsSection/BotsSection/BotsRow/BotsDecrease" to="." method="_on_bots_decrease_pressed"]
+[connection signal="pressed" from="MainContainer/ContentContainer/SettingsSection/BotsSection/BotsRow/BotsIncrease" to="." method="_on_bots_increase_pressed"]
+[connection signal="pressed" from="MainContainer/ContentContainer/SettingsSection/MapSection/MapRow/MapNav/PrevMap" to="." method="_on_prev_map_pressed"]
+[connection signal="pressed" from="MainContainer/ContentContainer/SettingsSection/MapSection/MapRow/MapNav/NextMap" to="." method="_on_next_map_pressed"]
+[connection signal="pressed" from="MainContainer/ButtonRow/BackButton" to="." method="_on_back_pressed"]
+[connection signal="pressed" from="MainContainer/ButtonRow/StartButton" to="." method="_on_start_pressed"]

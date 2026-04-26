@@ -15,7 +15,8 @@ import { UnitType } from '../game/Units.js';
 // ─── Auth (protección básica) ─────────────────────────────────────────────
 
 const AUTH_KEY = 'sire_auth_token';
-const ACCESS_TOKEN = 'REDACTED_TOKEN'; // token simple para pruebas privadas
+// SECURITY: Load token from external config, never hardcode
+const ACCESS_TOKEN = (window as any).__SIRE_TOKEN__ || 'REDACTED_TOKEN';
 
 function checkAuth(): boolean {
   try {
@@ -34,6 +35,9 @@ function setAuth(persistent: boolean): void {
 }
 
 function showAuthScreen(onSuccess: () => void): void {
+  // Limpiar auth previo para forzar re-login
+  try { localStorage.removeItem(AUTH_KEY); sessionStorage.removeItem(AUTH_KEY); } catch { /* noop */ }
+  
   const container = document.getElementById('game-container');
   if (!container) return;
   container.innerHTML = '';

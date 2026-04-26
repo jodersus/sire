@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 64" width="320" height="64">
+  <!-- Pradera -->
+  <polygon points="32,8 52,18 52,38 32,48 12,38 12,18" fill="#7CB342" stroke="#558B2F" stroke-width="2"/>
+  <!-- Bosque -->
+  <polygon points="96,8 116,18 116,38 96,48 76,38 76,18" fill="#33691E" stroke="#1B5E20" stroke-width="2"/>
+  <circle cx="96" cy="22" r="6" fill="#558B2F"/>
+  <circle cx="88" cy="30" r="5" fill="#689F38"/>
+  <circle cx="104" cy="30" r="5" fill="#689F38"/>
+  <!-- Montaña -->
+  <polygon points="160,8 180,18 180,38 160,48 140,38 140,18" fill="#5D4037" stroke="#3E2723" stroke-width="2"/>
+  <polygon points="152,28 160,14 168,28" fill="#8D6E63"/>
+  <polygon points="164,32 172,20 178,32" fill="#A1887F"/>
+  <!-- Agua -->
+  <polygon points="224,8 244,18 244,38 224,48 204,38 204,18" fill="#1976D2" stroke="#0D47A1" stroke-width="2"/>
+  <path d="M212 26 Q220 22, 228 26 Q236 30, 244 26" fill="none" stroke="#42A5F5" stroke-width="2"/>
+  <path d="M212 34 Q220 30, 228 34 Q236 38, 244 34" fill="none" stroke="#42A5F5" stroke-width="2"/>
+  <!-- Desierto -->
+  <polygon points="288,8 308,18 308,38 288,48 268,38 268,18" fill="#FBC02D" stroke="#F57F17" stroke-width="2"/>
+  <circle cx="278" cy="30" r="3" fill="#F9A825"/>
+  <circle cx="298" cy="24" r="2" fill="#F9A825"/>
+  <!-- Nieve -->
+  <polygon points="352,8 372,18 372,38 352,48 332,38 332,18" fill="#E0E0E0" stroke="#BDBDBD" stroke-width="2"/>
+</svg>
