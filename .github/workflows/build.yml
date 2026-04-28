@@ -29,11 +29,16 @@ jobs:
           sudo mv Godot_v4.4.1-stable_linux.x86_64 /usr/local/bin/godot
           godot --version
 
+      - name: Import project assets
+        run: |
+          cd godot
+          godot --headless --import --quit
+
       - name: Export HTML5
         run: |
           mkdir -p docs/godot
           cd godot
-          godot --headless --export-release "Web"
+          godot --headless --export-release "Web" ../docs/godot/index.html
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
