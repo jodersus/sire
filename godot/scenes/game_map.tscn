@@ -5,6 +5,8 @@
 [ext_resource type="Script" path="res://scripts/map_generator.gd" id="2_mapgen"]
 [ext_resource type="Script" path="res://scripts/camera_controller.gd" id="3_camctrl"]
 [ext_resource type="Script" path="res://scripts/world_spherical_renderer.gd" id="4_sphere"]
+[ext_resource type="Script" path="res://scripts/unit_renderer.gd" id="5_unitrend"]
+[ext_resource type="Script" path="res://scripts/city_renderer.gd" id="6_cityrend"]
 
 [sub_resource type="TileSet" id="TileSet_hex_flat"]
 tile_shape = 3  ## TILE_SHAPE_HEXAGON
@@ -59,3 +61,9 @@ text = "Click-drag: desplazar mapa\nScroll: zoom\nFlechas: mover cámara"
 
 [node name="WorldSphericalRenderer" type="Node" parent="."]
 script = ExtResource("4_sphere")
+
+[node name="UnitRenderer" type="Node2D" parent="."]
+script = ExtResource("5_unitrend")
+
+[node name="CityRenderer" type="Node2D" parent="."]
+script = ExtResource("6_cityrend")

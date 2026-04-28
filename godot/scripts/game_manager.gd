@@ -14,6 +14,8 @@ var turn_manager: TurnManager
 var hex_grid: HexGrid
 var game_map: GameMap
 var hud: CanvasLayer
+var unit_renderer: UnitRenderer
+var city_renderer: CityRenderer
 var _ai_adapters: Array = []
 
 # ---------------------------------------------------------------------------
@@ -99,6 +101,12 @@ func initialize_game() -> void:
 	# Posicionar unidades y ciudades iniciales
 	_place_starting_cities_and_units()
 
+	# Sincronizar visuales de unidades y ciudades
+	if unit_renderer != null:
+		unit_renderer.sync_from_players(turn_manager.players)
+	if city_renderer != null:
+		city_renderer.sync_from_players(turn_manager.players)
+
 	# Inicializar IA
 	_init_ai()
 
@@ -129,6 +137,8 @@ func _discover_references() -> void:
 
 	if game_map != null:
 		hex_grid = game_map.hex_grid
+		unit_renderer = game_map.unit_renderer
+		city_renderer = game_map.city_renderer
 
 # ---------------------------------------------------------------------------
 # JUGADORES

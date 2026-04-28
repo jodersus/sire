@@ -9,6 +9,8 @@ extends Node2D
 @onready var map_generator: Node = $MapGenerator
 @onready var tilemap: TileMapLayer = $TileMapLayer
 @onready var camera: Camera2D = $Camera2D
+@onready var unit_renderer: UnitRenderer = $UnitRenderer
+@onready var city_renderer: CityRenderer = $CityRenderer
 
 ## Atlas procedural: 6 tiles de 64x56 en una fila.
 var _atlas_texture: ImageTexture
@@ -30,6 +32,8 @@ const ATLAS_TILE_HEIGHT := 56
 func _ready():
 	## Conectar dependencias.
 	map_generator.hex_grid = hex_grid
+	unit_renderer.hex_grid = hex_grid
+	city_renderer.hex_grid = hex_grid
 
 	## Generar atlas procedural y configurar TileSet.
 	_setup_tileset()

@@ -1,63 +1,57 @@
-# Sire
+# SIRE
 
-Juego de estrategia por turnos inspirado en The Battle of Polytopia. Mundo hexagonal esférico con wrap-around, 7 tribus jugables, sistema de tecnologías, combate por turnos e IA de bots.
+Juego de estrategia por turnos inspirado en The Battle of Polytopia.
+Mundo hexagonal esférico con wrap-around, 7 tribus jugables, sistema de tecnologías, combate por turnos e IA de bots.
 
-## 🎮 Jugar
+**Motor:** Godot 4.4 (GDScript)  
+**Export:** HTML5 (GitHub Pages)  
+**Repo:** https://github.com/jodersus/sire
 
-Accede a la versión publicada en GitHub Pages:
+---
 
-**URL:** `https://<tu-usuario>.github.io/sire/`
+## Estado Actual
 
-> Reemplaza `<tu-usuario>` con tu nombre de usuario de GitHub.
+### Implementado
+- Generación procedural de mapa (6 terrenos, recursos)
+- Grilla hexagonal axial con wrap-around esférico
+- 7 tribus con habilidades únicas
+- 9 tipos de unidades con stats y bonos de tribu
+- 14 tecnologías con árbol de prerequisitos
+- Sistema de ciudades (niveles 1-5, edificios, cola de entrenamiento)
+- Combate con bonos de terreno, contraataque, asedio
+- IA de bots (3 dificultades)
+- Menú principal, configuración de partida, HUD
+- Cámara con pan, zoom y límites suaves
 
-### Token de acceso
-Al cargar la página se solicita un token. El token por defecto es:
+### En Desarrollo
+- Renderizado visual de unidades y ciudades en el mapa
+- Selección de unidades y movimiento interactivo
+- Pipeline de build/export a HTML5
+
+---
+
+## Estructura
+
 ```
-REDACTED_TOKEN
-```
-
-## 🛠️ Desarrollo
-
-### Requisitos
-- Node.js 18+
-- TypeScript 5+
-
-### Instalación
-```bash
-npm install
-```
-
-### Compilar
-```bash
-npx tsc
-```
-
-El compilado se genera en `docs/` (configurado para GitHub Pages).
-
-### Estructura
-```
-src/
-  engine/         # Motor: hex grid, ECS, generación procedural, mundo esférico
-  game/           # Lógica: tribus, unidades, ciudades, combate, tecnologías
-  ui/             # Interfaz: renderer Canvas 2D, cámara, input, HUD
-  assets/         # Paleta de colores y SVGs
-
-docs/             # Compilado para GitHub Pages
+godot/
+  project.godot
+  scenes/           # Escenas: menú, setup, juego, HUD, pausa
+  scripts/          # Lógica del juego (GDScript)
+  assets/           # Sprites SVG, tilesets, audio, íconos
+docs/godot/         # Export HTML5 para GitHub Pages
 ```
 
-## 🗺️ Características
+---
 
-- **Mundo esférico**: Mapa toroidal con wrap-around visual. Sal por un borde, entra por el opuesto.
-- **7 tribus**: Cada una con habilidad pasiva única, color y unidad inicial.
-- **9 unidades**: Explorador, Guerrero, Arquero, Jinete, Caballero, Barco, Buque de Guerra, Catapulta, Gigante.
-- **14 tecnologías**: Árbol tecnológico con prerequisitos.
-- **Sistema de ciudades**: Niveles 1-5, territorio, edificios, cola de entrenamiento.
-- **Combate por turnos**: Con bonos de terreno, contraataque y asedios a ciudades.
-- **IA de bots**: 3 niveles de dificultad (expandir, atacar, entrenar).
-- **Fog of war**: Exploración progresiva del mapa.
+## Desarrollo Local
 
-## 📝 Notas
+Requiere Godot 4.4.1+.
 
-- TypeScript vanilla, sin frameworks externos.
-- Renderer Canvas 2D puro.
-- Sin backend: autenticación por token en frontend.
+Exportar a Web:
+- Editor → Exportar → Web → Exportar a `docs/godot/`
+
+---
+
+## URL Publicada
+
+`https://jodersus.github.io/sire/` (GitHub Pages desde `/docs`)
