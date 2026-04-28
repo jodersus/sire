@@ -9,6 +9,14 @@ Mundo hexagonal esférico con wrap-around, 7 tribus jugables, sistema de tecnolo
 
 ---
 
+## Jugar Ahora
+
+**https://jodersus.github.io/sire/**
+
+Single-player contra bots. No requiere autenticación ni registro.
+
+---
+
 ## Estado Actual
 
 ### Implementado
@@ -20,13 +28,16 @@ Mundo hexagonal esférico con wrap-around, 7 tribus jugables, sistema de tecnolo
 - Sistema de ciudades (niveles 1-5, edificios, cola de entrenamiento)
 - Combate con bonos de terreno, contraataque, asedio
 - IA de bots (3 dificultades)
-- Menú principal, configuración de partida, HUD
+- Menú principal, configuración de partida, HUD interactivo
 - Cámara con pan, zoom y límites suaves
+- Selección de unidades, ciudades y movimiento interactivo
+- Sistema de turnos con ingreso de recursos
+- Pantalla de victoria/derrota
 
 ### En Desarrollo
-- Renderizado visual de unidades y ciudades en el mapa
-- Selección de unidades y movimiento interactivo
-- Pipeline de build/export a HTML5
+- Pipeline de build/export automático a HTML5
+- Árbol de tecnologías UI
+- Sonido y música
 
 ---
 
@@ -35,10 +46,10 @@ Mundo hexagonal esférico con wrap-around, 7 tribus jugables, sistema de tecnolo
 ```
 godot/
   project.godot
-  scenes/           # Escenas: menú, setup, juego, HUD, pausa
+  scenes/           # Escenas: menú, setup, juego, HUD, pausa, game over
   scripts/          # Lógica del juego (GDScript)
   assets/           # Sprites SVG, tilesets, audio, íconos
-docs/godot/         # Export HTML5 para GitHub Pages
+docs/               # Export HTML5 para GitHub Pages
 ```
 
 ---
@@ -48,10 +59,27 @@ docs/godot/         # Export HTML5 para GitHub Pages
 Requiere Godot 4.4.1+.
 
 Exportar a Web:
-- Editor → Exportar → Web → Exportar a `docs/godot/`
+```bash
+./build.sh
+```
+
+O manualmente:
+```bash
+cd godot
+godot --headless --export-release "Web" ../docs/index.html
+```
 
 ---
 
-## URL Publicada
+## Controles
 
-`https://jodersus.github.io/sire/` (GitHub Pages desde `/docs`)
+| Acción | Input |
+|--------|-------|
+| Desplazar mapa | Click-drag / Flechas |
+| Zoom | Scroll |
+| Seleccionar unidad/ciudad | Click izquierdo |
+| Mover unidad | Click en hex verde |
+| Cancelar selección | Click derecho / ESC |
+| Fin de turno | ESPACIO / ENTER |
+| Pausa | ESC |
+
