@@ -36,9 +36,9 @@ jobs:
 
       - name: Export HTML5
         run: |
-          mkdir -p docs/godot
+          mkdir -p docs
           cd godot
-          godot --headless --export-release "Web" ../docs/godot/index.html
+          godot --headless --export-release "Web" ../docs/index.html
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
