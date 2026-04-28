@@ -301,9 +301,15 @@ func _start_turn() -> void:
 		return
 
 	var player = turn_manager.current_player
+	
+	# Procesar ingreso del turno
+	player.collect_income()
+	player.reset_units()
+	player.process_training()
+	
 	turn_changed.emit(player.id, player.name)
 	_update_hud()
-	log_event("Turno de %s." % player.name)
+	log_event("Turno de %s. Estrellas: %d" % [player.name, player.resources.stars])
 
 	if not player.is_human:
 		_process_ai_turn(player)
@@ -328,6 +334,81 @@ func end_current_turn() -> void:
 	if not turn_manager.current_player.is_human:
 		return
 	_next_player()
+
+# ---------------------------------------------------------------------------
+# ACCIONES DE JUEGO
+# ---------------------------------------------------------------------------
+
+func city_action(action: String) -> void:
+	if turn_manager == null or turn_manager.current_player == null:
+		return
+	var player = turn_manager.current_player
+	
+	# Obtener ciudad seleccionada desde el input handler
+	var selected_city = null
+	if map_input != null:
+		selected_city = map_input.selected_city
+	
+	if selected_city == null:
+		log_event("Ninguna ciudad seleccionada")
+		return
+	
+	match action:
+		"Entrenar unidad":
+			_try_train_unit(player, selected_city)
+		"Construir":
+			_try_build(player, selected_city)
+		"Subir nivel":
+			_try_upgrade_city(player, selected_city)
+
+func _try_train_unit(player, city) -> void:
+	var cost := 3
+	if player.resources.spend(GameResources.ResourceType.STARS, cost):
+		var unit_type := Units.UnitType.GUERRERO
+		var unit := Units.create_unit(unit_type, player.id, player.tribe_id, city.position)
+		player.units.append(unit)
+		if unit_renderer != null:
+			unit_renderer.spawn_unit(unit)
+		log_event("Entrenado: %s en %s" % [unit.get_name(), city.name])
+		_update_hud()
+	else:
+		log_event("Estrellas insuficientes para entrenar")
+
+func _try_build(player, city) -> void:
+	var cost := 4
+	if player.resources.spend(GameResources.ResourceType.STARS, cost):
+		if city.buildings.size() < city.get_max_buildings():
+			city.buildings.append(Cities.BuildingType.GRANJA)
+			log_event("Construido en %s" % city.name)
+			_update_hud()
+		else:
+			log_event("Limite de edificios alcanzado")
+			player.resources.add(GameResources.ResourceType.STARS, cost)
+	else:
+		log_event("Estrellas insuficientes para construir")
+
+func _try_upgrade_city(player, city) -> void:
+	var cost := city.level * 5
+	if player.resources.spend(GameResources.ResourceType.STARS, cost):
+		city.level_up()
+		if city_renderer != null:
+			city_renderer.update_city(city)
+		log_event("%s subio a nivel %d" % [city.name, city.level])
+		_update_hud()
+	else:
+		log_event("Estrellas insuficientes para subir nivel")
+
+func rest_selected_unit() -> void:
+	if map_input != null and map_input.selected_unit != null:
+		map_input.selected_unit.rest()
+		log_event("Unidad descansada")
+
+func open_tech_tree() -> void:
+	if turn_manager == null or turn_manager.current_player == null:
+		return
+	var player = turn_manager.current_player
+	log_event("Arbol de tecnologias (proximamente)")
+	# TODO: Mostrar panel de tecnologias
 
 # ---------------------------------------------------------------------------
 # INPUT DEL JUGADOR

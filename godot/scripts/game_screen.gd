@@ -1,8 +1,11 @@
 extends Node2D
+class_name GameScreen
+
 ## Pantalla principal del juego
 ## Delega la inicialización completa al GameManager autoload
 
 @onready var hud = $HUD
+@onready var game_over_screen = $GameOverScreen
 
 func _ready():
 	# Inicializar el juego a través del GameManager (autoload singleton)

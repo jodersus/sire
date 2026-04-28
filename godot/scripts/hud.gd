@@ -195,6 +195,27 @@ func _add_info_label(text: String):
 
 func _on_action_pressed(action: String):
 	add_event("Acción: %s" % action)
+	# Delegar acciones al GameManager
+	var gm := get_node_or_null("/root/GameManager")
+	if gm == null:
+		return
+	match action:
+		"Fin Turno", "Terminar turno":
+			if gm.has_method("end_current_turn"):
+				gm.end_current_turn()
+		"Descansar":
+			if gm.has_method("rest_selected_unit"):
+				gm.rest_selected_unit()
+		"Mover":
+			pass  # El movimiento se maneja por click en el mapa
+		"Atacar":
+			pass  # El ataque se maneja por click en enemigo
+		"Tecnología":
+			if gm.has_method("open_tech_tree"):
+				gm.open_tech_tree()
+		"Entrenar unidad", "Construir", "Subir nivel":
+			if gm.has_method("city_action"):
+				gm.city_action(action)
 
 func _on_pause_pressed():
 	get_tree().paused = true
