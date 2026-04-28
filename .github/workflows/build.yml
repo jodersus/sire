@@ -33,7 +33,8 @@ jobs:
         run: |
           wget -q --retry-connrefused --waitretry=3 https://github.com/godotengine/godot/releases/download/4.4.1-stable/Godot_v4.4.1-stable_export_templates.tpz
           mkdir -p ~/.local/share/godot/export_templates/4.4.1.stable/
-          unzip -o Godot_v4.4.1-stable_export_templates.tpz -d ~/.local/share/godot/export_templates/4.4.1.stable/
+          unzip -j Godot_v4.4.1-stable_export_templates.tpz 'templates/web_nothreads_debug.zip' -d ~/.local/share/godot/export_templates/4.4.1.stable/
+          unzip -j Godot_v4.4.1-stable_export_templates.tpz 'templates/web_nothreads_release.zip' -d ~/.local/share/godot/export_templates/4.4.1.stable/
           ls ~/.local/share/godot/export_templates/4.4.1.stable/ | head -5
 
       - name: Import project assets
