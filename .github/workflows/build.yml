@@ -29,6 +29,13 @@ jobs:
           sudo mv Godot_v4.4.1-stable_linux.x86_64 /usr/local/bin/godot
           godot --version
 
+      - name: Install Web export templates
+        run: |
+          wget -q --retry-connrefused --waitretry=3 https://github.com/godotengine/godot/releases/download/4.4.1-stable/Godot_v4.4.1-stable_export_templates.tpz
+          mkdir -p ~/.local/share/godot/export_templates/4.4.1.stable/
+          unzip -o Godot_v4.4.1-stable_export_templates.tpz -d ~/.local/share/godot/export_templates/4.4.1.stable/
+          ls ~/.local/share/godot/export_templates/4.4.1.stable/ | head -5
+
       - name: Import project assets
         run: |
           cd godot
