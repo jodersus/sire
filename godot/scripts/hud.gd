@@ -131,12 +131,67 @@ func show_unit_actions(unit_info: Dictionary):
 	for child in action_list.get_children():
 		child.queue_free()
 	
+	# Info de la unidad
+	var tribe := unit_info.get("tribe", "")
+	var hp := unit_info.get("hp", 0)
+	var max_hp := unit_info.get("max_hp", 0)
+	var atk := unit_info.get("attack", 0)
+	var def := unit_info.get("defense", 0)
+	var mov := unit_info.get("movement", 0)
+	var max_mov := unit_info.get("max_movement", 0)
+	var rango := unit_info.get("rango", 1)
+	
+	_add_info_label("Tribu: %s" % tribe)
+	_add_info_label("HP: %d/%d" % [hp, max_hp])
+	_add_info_label("Ataque: %d  |  Defensa: %d" % [atk, def])
+	_add_info_label("Movimiento: %d/%d" % [mov, max_mov])
+	_add_info_label("Rango: %d" % rango)
+	
+	var sep := HSeparator.new()
+	action_list.add_child(sep)
+	
+	# Botones de acción
 	var actions = unit_info.get("actions", ["Mover", "Atacar", "Descansar"])
 	for action in actions:
 		var btn = Button.new()
 		btn.text = action
 		btn.pressed.connect(_on_action_pressed.bind(action))
 		action_list.add_child(btn)
+
+func show_city_actions(city_info: Dictionary):
+	action_panel.visible = true
+	action_title.text = city_info.get("name", "Ciudad")
+	
+	for child in action_list.get_children():
+		child.queue_free()
+	
+	var level := city_info.get("level", 1)
+	var pop := city_info.get("population", 0)
+	var max_pop := city_info.get("max_pop", 2)
+	var stars := city_info.get("stars_per_turn", 0)
+	var buildings := city_info.get("buildings", 0)
+	
+	_add_info_label("Nivel: %d" % level)
+	_add_info_label("Población: %d/%d" % [pop, max_pop])
+	_add_info_label("Estrellas/turno: %d" % stars)
+	_add_info_label("Edificios: %d" % buildings)
+	
+	var sep := HSeparator.new()
+	action_list.add_child(sep)
+	
+	var actions = city_info.get("actions", ["Entrenar unidad", "Construir", "Subir nivel"])
+	for action in actions:
+		var btn = Button.new()
+		btn.text = action
+		btn.pressed.connect(_on_action_pressed.bind(action))
+		action_list.add_child(btn)
+
+func _add_info_label(text: String):
+	var label = Label.new()
+	label.text = text
+	label.add_theme_color_override("font_color", Color("#cbd5e1"))
+	label.add_theme_font_size_override("font_size", 13)
+	action_list.add_child(label)
 
 func _on_action_pressed(action: String):
 	add_event("Acción: %s" % action)

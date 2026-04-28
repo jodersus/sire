@@ -7,6 +7,7 @@
 [ext_resource type="Script" path="res://scripts/world_spherical_renderer.gd" id="4_sphere"]
 [ext_resource type="Script" path="res://scripts/unit_renderer.gd" id="5_unitrend"]
 [ext_resource type="Script" path="res://scripts/city_renderer.gd" id="6_cityrend"]
+[ext_resource type="Script" path="res://scripts/map_input_handler.gd" id="7_input"]
 
 [sub_resource type="TileSet" id="TileSet_hex_flat"]
 tile_shape = 3  ## TILE_SHAPE_HEXAGON
@@ -67,3 +68,6 @@ script = ExtResource("5_unitrend")
 
 [node name="CityRenderer" type="Node2D" parent="."]
 script = ExtResource("6_cityrend")
+
+[node name="MapInputHandler" type="Node2D" parent="."]
+script = ExtResource("7_input")

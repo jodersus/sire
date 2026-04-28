@@ -16,6 +16,7 @@ var game_map: GameMap
 var hud: CanvasLayer
 var unit_renderer: UnitRenderer
 var city_renderer: CityRenderer
+var map_input: MapInputHandler
 var _ai_adapters: Array = []
 
 # ---------------------------------------------------------------------------
@@ -110,6 +111,24 @@ func initialize_game() -> void:
 	# Inicializar IA
 	_init_ai()
 
+	# Configurar MapInputHandler
+	if map_input != null:
+		map_input.hex_grid = hex_grid
+		map_input.game_map = game_map
+		map_input.unit_renderer = unit_renderer
+		map_input.city_renderer = city_renderer
+		map_input.turn_manager = turn_manager
+
+		# Conectar señales
+		if not map_input.unit_selected.is_connected(_on_unit_selected):
+			map_input.unit_selected.connect(_on_unit_selected)
+		if not map_input.city_selected.is_connected(_on_city_selected):
+			map_input.city_selected.connect(_on_city_selected)
+		if not map_input.hex_selected.is_connected(_on_hex_selected):
+			map_input.hex_selected.connect(_on_hex_selected)
+		if not map_input.unit_moved.is_connected(_on_unit_moved):
+			map_input.unit_moved.connect(_on_unit_moved)
+
 	# Estado inicial del turno
 	turn_manager.current_player = turn_manager.players[0]
 	turn_manager.current_player_id = 0
@@ -139,6 +158,16 @@ func _discover_references() -> void:
 		hex_grid = game_map.hex_grid
 		unit_renderer = game_map.unit_renderer
 		city_renderer = game_map.city_renderer
+
+	# MapInputHandler puede estar en GameMap o como nodo independiente
+	map_input = scene.get_node_or_null("GameMap/MapInputHandler")
+	if map_input == null:
+		map_input = scene.get_node_or_null("MapInputHandler")
+	if map_input == null and game_map != null:
+		# Crear input handler si no existe
+		map_input = MapInputHandler.new()
+		map_input.name = "MapInputHandler"
+		game_map.add_child(map_input)
 
 # ---------------------------------------------------------------------------
 # JUGADORES
@@ -308,12 +337,6 @@ func _unhandled_input(event: InputEvent) -> void:
 	if not turn_manager.current_player.is_human:
 		return
 
-	if event is InputEventMouseButton:
-		if event.pressed and event.button_index == MOUSE_BUTTON_LEFT:
-			_handle_left_click()
-		elif event.pressed and event.button_index == MOUSE_BUTTON_RIGHT:
-			_handle_right_click()
-
 	if event is InputEventKey and event.pressed:
 		match event.keycode:
 			KEY_SPACE, KEY_ENTER:
@@ -321,21 +344,62 @@ func _unhandled_input(event: InputEvent) -> void:
 			KEY_ESCAPE:
 				_toggle_pause()
 
-func _handle_left_click() -> void:
-	if game_map == null or game_map.camera == null:
-		return
-	var mouse_world := game_map.camera.get_global_mouse_position()
-	var hex := hex_grid.pixel_to_axialv(mouse_world)
-	log_event("Seleccionado: %s" % str(hex))
-
-func _handle_right_click() -> void:
-	pass
-
 func _toggle_pause() -> void:
 	get_tree().paused = not get_tree().paused
 	if get_tree().paused:
 		var pause_menu = preload("res://scenes/pause_menu.tscn").instantiate()
 		get_tree().current_scene.add_child(pause_menu)
+
+# ---------------------------------------------------------------------------
+# CALLBACKS DE MAP INPUT
+# ---------------------------------------------------------------------------
+
+func _on_unit_selected(unit: Units.Unit) -> void:
+	log_event("Unidad seleccionada: %s (%s)" % [unit.get_name(), Tribes.get_tribe_name(unit.tribe_id)])
+	# Actualizar HUD con info de unidad
+	if hud != null and hud.has_method("show_unit_actions"):
+		var unit_info := _build_unit_info_dict(unit)
+		hud.show_unit_actions(unit_info)
+
+func _on_city_selected(city: Cities.City) -> void:
+	log_event("Ciudad seleccionada: %s (Nivel %d)" % [city.name, city.level])
+	if hud != null and hud.has_method("show_city_actions"):
+		var city_info := _build_city_info_dict(city)
+		hud.show_city_actions(city_info)
+
+func _on_hex_selected(coord: Vector2i) -> void:
+	# Click en hex vacío - ocultar panel de acciones
+	if hud != null and hud.has_method("hide_action_panel"):
+		hud.hide_action_panel()
+
+func _on_unit_moved(unit: Units.Unit, _from: Vector2i, _to: Vector2i) -> void:
+	log_event("Movimiento: %s a %s" % [unit.get_name(), str(_to)])
+	_update_hud()
+
+func _build_unit_info_dict(unit: Units.Unit) -> Dictionary:
+	return {
+		"name": unit.get_name(),
+		"tribe": Tribes.get_tribe_name(unit.tribe_id),
+		"hp": unit.current_health,
+		"max_hp": unit.max_health,
+		"attack": unit.attack,
+		"defense": unit.defense,
+		"movement": unit.movimientos_restantes,
+		"max_movement": unit.movement,
+		"rango": unit.rango_ataque,
+		"actions": ["Mover", "Atacar", "Descansar"] if unit.movimientos_restantes > 0 else ["Descansar"],
+	}
+
+func _build_city_info_dict(city: Cities.City) -> Dictionary:
+	return {
+		"name": city.name,
+		"level": city.level,
+		"population": city.population,
+		"max_pop": city.get_max_population(),
+		"stars_per_turn": city.get_stars_per_turn(),
+		"buildings": city.buildings.size(),
+		"actions": ["Entrenar unidad", "Construir", "Subir nivel"],
+	}
 
 # ---------------------------------------------------------------------------
 # HUD
