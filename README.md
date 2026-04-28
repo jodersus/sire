@@ -83,3 +83,4 @@ godot --headless --export-release "Web" ../docs/index.html
 | Fin de turno | ESPACIO / ENTER |
 | Pausa | ESC |
 
+# GitHub Pages deployment
