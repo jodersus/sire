@@ -137,6 +137,10 @@ func initialize_game() -> void:
 	_game_initialized = true
 	game_started.emit()
 
+	# Conectar señales de TurnManager
+	if not turn_manager.game_over.is_connected(_on_game_over):
+		turn_manager.game_over.connect(_on_game_over)
+
 	_start_turn()
 	log_event("Partida iniciada. Turno 1.")
 
@@ -448,3 +452,57 @@ func _get_random_tribe_except(except_id: int) -> int:
 	if options.is_empty():
 		return Tribes.TribeID.SOLARIS
 	return options[randi() % options.size()]
+
+# ---------------------------------------------------------------------------
+# FIN DE PARTIDA
+# ---------------------------------------------------------------------------
+
+func _on_game_over(winner_id: int, victory_type: String) -> void:
+	var winner_name := ""
+	for player in turn_manager.players:
+		if player.id == winner_id:
+			winner_name = player.name
+			break
+
+	# Mostrar pantalla de victoria/derrota
+	var game_over_screen := get_tree().current_scene.get_node_or_null("GameOverScreen")
+	if game_over_screen == null:
+		game_over_screen = get_tree().current_scene.get_node_or_null("UI/GameOverScreen")
+
+	if game_over_screen != null and game_over_screen.has_method("show_victory"):
+		var current_player := turn_manager.get_current_player()
+		var is_human_winner := false
+		for player in turn_manager.players:
+			if player.id == winner_id and player.is_human:
+				is_human_winner = true
+				break
+
+		var score := _calculate_winner_score(winner_id)
+		if is_human_winner:
+			game_over_screen.show_victory(winner_name, turn_manager.turn_number, score)
+		else:
+			game_over_screen.show_defeat(winner_name, turn_manager.turn_number)
+	else:
+		# Fallback: log en eventos
+		if victory_type == "dominacion":
+			log_event("Victoria por dominación: %s" % winner_name)
+		else:
+			log_event("Victoria por puntuación: %s" % winner_name)
+
+func _calculate_winner_score(player_id: int) -> int:
+	for player in turn_manager.players:
+		if player.id == player_id:
+			return _calculate_player_score(player)
+	return 0
+
+func _calculate_player_score(player) -> int:
+	var score := 0
+	for city in player.cities:
+		score += city.level * 20
+	for unit in player.units:
+		if unit.is_alive():
+			score += Units.get_unit_cost(unit.type)
+	for tech_id in player.tech_tree.researched:
+		score += Technologies.get_tech_cost(tech_id)
+	score += player.resources.stars
+	return score

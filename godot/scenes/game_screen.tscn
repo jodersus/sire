@@ -4,6 +4,8 @@
 [ext_resource type="PackedScene" uid="uid://c8q1g8y3khud00" path="res://scenes/hud.tscn" id="2_hud00"]
 [ext_resource type="PackedScene" uid="uid://game_map_scene_sire" path="res://scenes/game_map.tscn" id="3_gamemap"]
 
+[ext_resource type="PackedScene" uid="uid://c8q1g8y3kover0" path="res://scenes/game_over_screen.tscn" id="4_over0"]
+
 [node name="GameScreen" type="Node2D"]
 script = ExtResource("1_game0")
 
@@ -12,3 +14,5 @@ script = ExtResource("1_game0")
 [node name="GameMap" parent="MapContainer" instance=ExtResource("3_gamemap")]
 
 [node name="HUD" parent="." instance=ExtResource("2_hud00")]
+
+[node name="GameOverScreen" parent="." instance=ExtResource("4_over0")]
