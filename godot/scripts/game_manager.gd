@@ -272,7 +272,7 @@ func _init_ai() -> void:
 			)
 			_ai_adapters.append(adapter)
 
-func _process_ai_turn(player) -> void:
+func _process_ai_turn(player: TurnManager.Player) -> void:
 	if _is_processing_ai:
 		return
 	_is_processing_ai = true
@@ -342,10 +342,10 @@ func end_current_turn() -> void:
 func city_action(action: String) -> void:
 	if turn_manager == null or turn_manager.current_player == null:
 		return
-	var player = turn_manager.current_player
+	var player := turn_manager.current_player
 	
 	# Obtener ciudad seleccionada desde el input handler
-	var selected_city = null
+	var selected_city: Cities.City = null
 	if map_input != null:
 		selected_city = map_input.selected_city
 	
@@ -361,7 +361,7 @@ func city_action(action: String) -> void:
 		"Subir nivel":
 			_try_upgrade_city(player, selected_city)
 
-func _try_train_unit(player, city) -> void:
+func _try_train_unit(player: TurnManager.Player, city: Cities.City) -> void:
 	var cost := 3
 	if player.resources.spend(GameResources.ResourceType.STARS, cost):
 		var unit_type := Units.UnitType.GUERRERO
@@ -374,7 +374,7 @@ func _try_train_unit(player, city) -> void:
 	else:
 		log_event("Estrellas insuficientes para entrenar")
 
-func _try_build(player, city) -> void:
+func _try_build(player: TurnManager.Player, city: Cities.City) -> void:
 	var cost := 4
 	if player.resources.spend(GameResources.ResourceType.STARS, cost):
 		if city.buildings.size() < city.get_max_buildings():
@@ -387,7 +387,7 @@ func _try_build(player, city) -> void:
 	else:
 		log_event("Estrellas insuficientes para construir")
 
-func _try_upgrade_city(player, city) -> void:
+func _try_upgrade_city(player: TurnManager.Player, city: Cities.City) -> void:
 	var cost := city.level * 5
 	if player.resources.spend(GameResources.ResourceType.STARS, cost):
 		city.level_up()
@@ -511,7 +511,7 @@ func log_event(text: String) -> void:
 	if hud != null and hud.has_method("add_event"):
 		hud.add_event(text)
 
-func _count_population(player) -> int:
+func _count_population(player: TurnManager.Player) -> int:
 	var pop := 0
 	for city in player.cities:
 		pop += city.population
@@ -576,7 +576,7 @@ func _calculate_winner_score(player_id: int) -> int:
 			return _calculate_player_score(player)
 	return 0
 
-func _calculate_player_score(player) -> int:
+func _calculate_player_score(player: TurnManager.Player) -> int:
 	var score := 0
 	for city in player.cities:
 		score += city.level * 20
