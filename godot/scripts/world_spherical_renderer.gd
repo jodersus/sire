@@ -26,13 +26,9 @@ func _create_copies() -> void:
 
 	clear_copies()
 
-	# Calcular dimensiones aproximadas del mundo en píxeles.
-	# Flat-top hex: ancho = hex_size * sqrt(3), alto = hex_size * 2.
-	# En la práctica usamos los valores del grid para mantener coherencia.
-	var hex_w: float = hex_grid.hex_size * 1.73205  # sqrt(3)
-	var hex_h: float = hex_grid.hex_size * 1.5
-	_world_width = hex_grid.map_width * hex_w
-	_world_height = hex_grid.map_height * hex_h
+	# Usar dimensiones exactas del hex grid para wrap-around perfecto.
+	_world_width = hex_grid.world_width()
+	_world_height = hex_grid.world_height()
 
 	# Crear 8 copias en grid 3x3 (excluyendo el centro 0,0)
 	for dx in [-1, 0, 1]:

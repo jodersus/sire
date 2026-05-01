@@ -2,8 +2,7 @@ class_name GameMap
 extends Node2D
 
 ## Escena principal del mapa de SIRE.
-## Orquesta HexGrid, MapGenerator, y renderizado custom de hexágonos como Polygon2D.
-## Renderiza el mapa procedural usando Polygon2D para alinear exactamente con HexGrid.
+## Renderiza hexágonos como Polygon2D directamente sobre posiciones de HexGrid.
 
 @onready var hex_grid: Node = $HexGrid
 @onready var map_generator: Node = $MapGenerator
@@ -63,8 +62,9 @@ func _render_map():
 			var pixel_pos: Vector2 = hex_grid.axial_to_pixelv(hex_coord)
 			
 			## Crear Polygon2D para este hex.
+			## Usamos hex_size exacto para que los hexágonos se toquen borde con borde.
 			var poly := Polygon2D.new()
-			poly.polygon = _make_hex_polygon(pixel_pos, hex_grid.hex_size * 0.98)
+			poly.polygon = _make_hex_polygon(pixel_pos, hex_grid.hex_size)
 			poly.color = TERRAIN_COLORS[terrain]
 			
 			## Borde sutil para definir la forma.
@@ -72,7 +72,7 @@ func _render_map():
 			border.points = poly.polygon
 			border.closed = true
 			border.width = 1.0
-			border.default_color = Color("#00000040")
+			border.default_color = Color("#00000030")
 			poly.add_child(border)
 			
 			_terrain_layer.add_child(poly)
