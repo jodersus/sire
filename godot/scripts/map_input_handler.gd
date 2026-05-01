@@ -376,8 +376,9 @@ func _get_hex_polygon(coord: Vector2i) -> PackedVector2Array:
 	var center := hex_grid.axial_to_pixelv(coord)
 	var size := hex_grid.hex_size * 0.95  # Ligeramente más pequeño que el hex real
 	var points := PackedVector2Array()
+	# Flat-top hexagon: rotate by -30 degrees so flat sides are top/bottom
 	for i in range(6):
-		var angle := i * PI / 3.0
+		var angle := i * PI / 3.0 - PI / 6.0
 		points.append(center + Vector2(cos(angle), sin(angle)) * size)
 	return points
 

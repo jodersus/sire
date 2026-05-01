@@ -2,10 +2,8 @@ class_name CameraController
 extends Camera2D
 
 ## Control de cámara para SIRE.
-## Soporta pan con click-drag, zoom con scroll, y límites suaves del mundo.
-
-## Velocidad de pan (píxeles por segundo) cuando se arrastra.
-@export var pan_speed: float = 1.0
+## Pan con click-drag (polling en _process para evitar conflicto con clicks de selección).
+## Zoom con scroll (eventos). Flechas para pan con teclado.
 
 ## Factor de zoom por tick de rueda del ratón.
 @export var zoom_step: float = 0.1
@@ -14,8 +12,8 @@ extends Camera2D
 @export var min_zoom: float = 0.3
 @export var max_zoom: float = 3.0
 
-## Límites suaves: la cámara puede salir un poco del mundo pero rebota.
-@export var soft_limit_margin: float = 100.0
+## Velocidad de pan con teclado (píxeles/segundo).
+@export var keyboard_pan_speed: float = 600.0
 
 ## Factor de suavizado para movimiento (0 = instantáneo, 1 = sin movimiento).
 @export var smooth_factor: float = 0.15
@@ -23,7 +21,7 @@ extends Camera2D
 ## Referencia al sistema de hex grid para conocer el tamaño del mundo.
 var hex_grid: Node
 
-## Estado de arrastre.
+## Estado de arrastre (polling del botón del mouse).
 var _is_panning: bool = false
 var _last_mouse_pos: Vector2 = Vector2.ZERO
 
@@ -36,70 +34,62 @@ var _world_rect: Rect2 = Rect2(Vector2.ZERO, Vector2(1000, 1000))
 
 func _ready():
 	_target_position = position
-	## Usamos límites suaves propios, no los de Godot.
 	position_smoothing_enabled = false
 
 
 func _process(delta: float):
+	## --- Pan con click-drag (polling, no eventos) ---
+	var mouse_left_pressed := Input.is_mouse_button_pressed(MOUSE_BUTTON_LEFT)
+	
+	if mouse_left_pressed and not _is_panning:
+		## Iniciar pan.
+		_is_panning = true
+		_last_mouse_pos = get_global_mouse_position()
+	elif not mouse_left_pressed and _is_panning:
+		## Terminar pan.
+		_is_panning = false
+	
+	if _is_panning:
+		var current_mouse := get_global_mouse_position()
+		var delta_pos: Vector2 = _last_mouse_pos - current_mouse
+		if delta_pos.length_squared() > 0.01:
+			_target_position += delta_pos
+			_last_mouse_pos = current_mouse
+	
+	## --- Pan con flechas (polling) ---
+	var keyboard_delta := Vector2.ZERO
+	var speed := keyboard_pan_speed / zoom.x * delta
+	if Input.is_key_pressed(KEY_UP):    keyboard_delta.y -= speed
+	if Input.is_key_pressed(KEY_DOWN):  keyboard_delta.y += speed
+	if Input.is_key_pressed(KEY_LEFT):  keyboard_delta.x -= speed
+	if Input.is_key_pressed(KEY_RIGHT): keyboard_delta.x += speed
+	if keyboard_delta.length_squared() > 0.01:
+		_target_position += keyboard_delta
+	
 	## Suavizar la posición hacia el objetivo.
 	if position != _target_position:
 		position = position.lerp(_target_position, smooth_factor)
 
-	## Aplicar límites duros nativos de Godot (configurados en update_world_limits).
-	## Los soft limits propios han sido reemplazados por limit_* del Camera2D.
-	pass
-
 
 func _unhandled_input(event: InputEvent):
-	## Click-drag para pan.
+	## Solo zoom con scroll (no entra en conflicto con clicks).
 	if event is InputEventMouseButton:
 		var mb := event as InputEventMouseButton
-		if mb.button_index == MOUSE_BUTTON_LEFT:
-			_is_panning = mb.pressed
-			if _is_panning:
-				_last_mouse_pos = get_global_mouse_position()
-
-		## Zoom con scroll.
-		if mb.button_index == MOUSE_BUTTON_WHEEL_UP:
+		if mb.button_index == MOUSE_BUTTON_WHEEL_UP and mb.pressed:
 			_zoom_at_cursor(zoom_step)
-		elif mb.button_index == MOUSE_BUTTON_WHEEL_DOWN:
+		elif mb.button_index == MOUSE_BUTTON_WHEEL_DOWN and mb.pressed:
 			_zoom_at_cursor(-zoom_step)
 
-	elif event is InputEventMouseMotion and _is_panning:
-		var motion := event as InputEventMouseMotion
-		var current_mouse := get_global_mouse_position()
-		var delta_pos: Vector2 = _last_mouse_pos - current_mouse
-		_target_position += delta_pos
-		_last_mouse_pos = current_mouse
 
-	## Pan alternativo con flechas (para teclado).
-	if event is InputEventKey:
-		var key := event as InputEventKey
-		var pan_delta := Vector2.ZERO
-		var keyboard_speed: float = 500.0 / zoom.x  ## Ajustar a zoom actual.
-		if key.pressed:
-			match key.keycode:
-				KEY_UP:    pan_delta.y -= keyboard_speed
-				KEY_DOWN:  pan_delta.y += keyboard_speed
-				KEY_LEFT:  pan_delta.x -= keyboard_speed
-				KEY_RIGHT: pan_delta.x += keyboard_speed
-			_target_position += pan_delta
-
-
-## Zoom centrado en la posición del cursor (o centro si no hay cursor).
+## Zoom centrado en la posición del cursor.
 func _zoom_at_cursor(delta_zoom: float):
 	var old_zoom: float = zoom.x
 	var new_zoom: float = clampf(old_zoom + delta_zoom, min_zoom, max_zoom)
 	if new_zoom == old_zoom:
 		return
 
-	## Obtener posición del mouse en world space antes del zoom.
 	var mouse_world := get_global_mouse_position()
-
-	## Aplicar zoom.
 	zoom = Vector2(new_zoom, new_zoom)
-
-	## Calcular cuánto se movió el punto bajo el cursor y ajustar.
 	var mouse_world_after := get_global_mouse_position()
 	var adjustment := mouse_world - mouse_world_after
 	_target_position += adjustment
@@ -109,7 +99,6 @@ func _zoom_at_cursor(delta_zoom: float):
 func update_world_limits(grid: Node):
 	hex_grid = grid
 	_world_rect = grid.get_world_rect()
-	## Configurar límites duros nativos del Camera2D.
 	limit_left = int(_world_rect.position.x)
 	limit_top = int(_world_rect.position.y)
 	limit_right = int(_world_rect.end.x)
@@ -120,8 +109,7 @@ func update_world_limits(grid: Node):
 	position = _target_position
 
 
-## Fuerza la posición de la cámara (útil para teletransporte wrap-around).
-## NOTA: wrap-around eliminado; esto se mantiene por compatibilidad.
+## Fuerza la posición de la cámara.
 func set_camera_position(pos: Vector2):
 	_target_position = pos
 	position = pos

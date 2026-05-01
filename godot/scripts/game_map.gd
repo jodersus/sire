@@ -66,7 +66,7 @@ func _setup_tileset():
 	var ts := TileSet.new()
 	ts.tile_shape = TileSet.TILE_SHAPE_HEXAGON
 	ts.tile_layout = TileSet.TILE_LAYOUT_STACKED
-	ts.tile_offset_axis = TileSet.TILE_OFFSET_AXIS_HORIZONTAL
+	ts.tile_offset_axis = TileSet.TILE_OFFSET_AXIS_VERTICAL
 	ts.tile_size = Vector2i(ATLAS_TILE_WIDTH, ATLAS_TILE_HEIGHT)
 
 	var source := TileSetAtlasSource.new()
