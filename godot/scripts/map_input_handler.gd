@@ -84,7 +84,7 @@ func _handle_left_click() -> void:
 
 	# Si hay una unidad seleccionada y hacemos click en un enemigo al alcance -> atacar
 	if selection_mode == SelectionMode.UNIT_SELECTED and selected_unit != null:
-		var enemy := _find_enemy_at(hex_coord)
+		var enemy = _find_enemy_at(hex_coord)
 		if enemy != null and _is_in_attack_range(selected_unit, enemy):
 			_try_attack(selected_unit, enemy)
 			return
@@ -299,7 +299,7 @@ func _is_in_attack_range(attacker: Units.Unit, target) -> bool:
 
 func _get_terrain_at(coord: Vector2i) -> String:
 	if game_map != null and game_map.map_generator != null:
-		var terrain_enum := game_map.map_generator.get_terrain(coord.x, coord.y)
+		var terrain_enum = game_map.map_generator.get_terrain(coord.x, coord.y)
 		return _terrain_enum_to_string(terrain_enum)
 	return "pradera"
 

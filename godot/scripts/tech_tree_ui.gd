@@ -34,7 +34,7 @@ func _refresh_tech_list() -> void:
 
 		var btn := Button.new()
 		btn.custom_minimum_size = Vector2(0, 40)
-		var affordable := player.resources.stars >= cost
+		var affordable: bool = player.resources.stars >= cost
 		var status := "[%d⭐]" % cost if affordable else "[%d⭐] (insuficiente)" % cost
 		btn.text = "%s %s" % [name_str, status]
 		btn.disabled = not affordable

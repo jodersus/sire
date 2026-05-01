@@ -45,8 +45,9 @@ func _process(delta: float):
 	if position != _target_position:
 		position = position.lerp(_target_position, smooth_factor)
 
-	## Aplicar límites suaves (rebotar si nos pasamos mucho).
-	_clamp_to_soft_limits()
+	## Aplicar límites duros nativos de Godot (configurados en update_world_limits).
+	## Los soft limits propios han sido reemplazados por limit_* del Camera2D.
+	pass
 
 
 func _unhandled_input(event: InputEvent):
@@ -88,7 +89,7 @@ func _unhandled_input(event: InputEvent):
 ## Zoom centrado en la posición del cursor (o centro si no hay cursor).
 func _zoom_at_cursor(delta_zoom: float):
 	var old_zoom: float = zoom.x
-	var new_zoom: float = clamp(old_zoom + delta_zoom, min_zoom, max_zoom)
+	var new_zoom: float = clampf(old_zoom + delta_zoom, min_zoom, max_zoom)
 	if new_zoom == old_zoom:
 		return
 
@@ -104,38 +105,23 @@ func _zoom_at_cursor(delta_zoom: float):
 	_target_position += adjustment
 
 
-## Limita la cámara a los bordes del mundo con margen suave.
-func _clamp_to_soft_limits():
-	if not hex_grid:
-		return
-
-	var viewport_size := get_viewport_rect().size / zoom
-	var half_vp := viewport_size * 0.5
-
-	## Rectángulo visible de la cámara.
-	var visible_rect := Rect2(_target_position - half_vp, viewport_size)
-
-	## Límites duros: el centro de la cámara no puede salir mucho del mundo.
-	var hard_min := _world_rect.position - Vector2(soft_limit_margin, soft_limit_margin)
-	var hard_max := _world_rect.end + Vector2(soft_limit_margin, soft_limit_margin)
-
-	var center := _target_position
-	center.x = clamp(center.x, hard_min.x + half_vp.x, hard_max.x - half_vp.x)
-	center.y = clamp(center.y, hard_min.y + half_vp.y, hard_max.y - half_vp.y)
-
-	_target_position = center
-
-
 ## Actualiza los límites del mundo basándose en el hex grid.
 func update_world_limits(grid: Node):
 	hex_grid = grid
 	_world_rect = grid.get_world_rect()
+	## Configurar límites duros nativos del Camera2D.
+	limit_left = int(_world_rect.position.x)
+	limit_top = int(_world_rect.position.y)
+	limit_right = int(_world_rect.end.x)
+	limit_bottom = int(_world_rect.end.y)
+	limit_smoothed = false
 	## Centrar la cámara al inicio.
 	_target_position = _world_rect.get_center()
 	position = _target_position
 
 
 ## Fuerza la posición de la cámara (útil para teletransporte wrap-around).
+## NOTA: wrap-around eliminado; esto se mantiene por compatibilidad.
 func set_camera_position(pos: Vector2):
 	_target_position = pos
 	position = pos

@@ -5,8 +5,8 @@ extends Node2D
 ## Cada unidad se muestra como un Sprite2D con su SVG correspondiente,
 ## coloreado según la tribu del propietario.
 
-## Diccionario de rutas de sprites por tipo de unidad
-const UNIT_SPRITES: Dictionary = {
+## Diccionario de rutas de sprites SVG por tipo de unidad
+const UNIT_SPRITES_SVG: Dictionary = {
 	Units.UnitType.EXPLORADOR: "res://assets/sprites/unit_explorer.svg",
 	Units.UnitType.GUERRERO: "res://assets/sprites/unit_warrior.svg",
 	Units.UnitType.ARQUERO: "res://assets/sprites/unit_archer.svg",
@@ -16,6 +16,19 @@ const UNIT_SPRITES: Dictionary = {
 	Units.UnitType.BUQUE_GUERRA: "res://assets/sprites/unit_warship.svg",
 	Units.UnitType.CATAPULTA: "res://assets/sprites/unit_catapult.svg",
 	Units.UnitType.GIGANTE: "res://assets/sprites/unit_giant.svg",
+}
+
+## Diccionario de rutas de sprites PNG (fallback para web export)
+const UNIT_SPRITES_PNG: Dictionary = {
+	Units.UnitType.EXPLORADOR: "res://assets/sprites/unit_explorer_png.png",
+	Units.UnitType.GUERRERO: "res://assets/sprites/unit_warrior_png.png",
+	Units.UnitType.ARQUERO: "res://assets/sprites/unit_archer_png.png",
+	Units.UnitType.JINETE: "res://assets/sprites/unit_rider_png.png",
+	Units.UnitType.CABALLERO: "res://assets/sprites/unit_knight_png.png",
+	Units.UnitType.BARCO: "res://assets/sprites/unit_boat_png.png",
+	Units.UnitType.BUQUE_GUERRA: "res://assets/sprites/unit_warship_png.png",
+	Units.UnitType.CATAPULTA: "res://assets/sprites/unit_catapult_png.png",
+	Units.UnitType.GIGANTE: "res://assets/sprites/unit_giant_png.png",
 }
 
 const UNIT_SCALE := Vector2(0.6, 0.6)
@@ -38,12 +51,24 @@ func spawn_unit(unit: Units.Unit) -> void:
 	sprite.scale = UNIT_SCALE
 	sprite.z_index = Z_INDEX_UNITS
 
-	# Cargar textura
-	var path: String = UNIT_SPRITES.get(unit.type, "")
-	if not path.is_empty() and ResourceLoader.exists(path):
-		var tex := load(path) as Texture2D
-		if tex:
-			sprite.texture = tex
+	# Cargar textura: intentar SVG primero, luego PNG fallback
+	var tex: Texture2D = null
+	var svg_path: String = UNIT_SPRITES_SVG.get(unit.type, "")
+	var png_path: String = UNIT_SPRITES_PNG.get(unit.type, "")
+	
+	# Intentar SVG
+	if not svg_path.is_empty() and ResourceLoader.exists(svg_path):
+		tex = load(svg_path) as Texture2D
+	
+	# Fallback a PNG
+	if tex == null and not png_path.is_empty() and ResourceLoader.exists(png_path):
+		tex = load(png_path) as Texture2D
+		print("UnitRenderer: Usando PNG fallback para unidad tipo %d" % unit.type)
+	
+	if tex != null:
+		sprite.texture = tex
+	else:
+		push_warning("UnitRenderer: No se pudo cargar textura para tipo %d" % unit.type)
 
 	# Colorear según tribu
 	var tribe_color: Color = Tribes.get_tribe_color(unit.tribe_id)

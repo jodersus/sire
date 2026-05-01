@@ -390,7 +390,7 @@ func _try_build(player: TurnManager.Player, city: Cities.City) -> void:
 func _try_upgrade_city(player: TurnManager.Player, city: Cities.City) -> void:
 	var cost := city.level * 5
 	if player.resources.spend(GameResources.ResourceType.STARS, cost):
-		city.level_up()
+		city.level_up(player.resources.stars)
 		if city_renderer != null:
 			city_renderer.update_city(city)
 		log_event("%s subio a nivel %d" % [city.name, city.level])

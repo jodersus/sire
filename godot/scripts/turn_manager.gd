@@ -101,6 +101,8 @@ class Player:
 ## Estado del gestor de turnos
 var current_phase: Phase
 var current_player_index: int
+var current_player: Player
+var current_player_id: int
 var players: Array[Player]
 var turn_number: int
 var phase_completed: bool
@@ -111,6 +113,8 @@ var max_turns: int  ## 0 = ilimitado
 func _init():
 	current_phase = Phase.INCOME
 	current_player_index = 0
+	current_player = null
+	current_player_id = 0
 	players = []
 	turn_number = 1
 	phase_completed = false
@@ -196,7 +200,16 @@ func _next_player() -> bool:
 		_check_game_end()
 		return true  ## Nuevo turno completo
 	
+	_update_current_player()
 	return false
+
+func _update_current_player():
+	if players.is_empty():
+		current_player = null
+		current_player_id = -1
+		return
+	current_player = players[current_player_index]
+	current_player_id = current_player.id
 
 ## Salta al siguiente jugador vivo
 func skip_to_next_alive_player():
@@ -214,6 +227,8 @@ func skip_to_next_alive_player():
 		## Evitar bucle infinito si todos están muertos
 		if current_player_index == original_index:
 			break
+	
+	_update_current_player()
 
 ## Devuelve el jugador actual
 func get_current_player() -> Player:

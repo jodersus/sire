@@ -5,6 +5,7 @@ class_name Cities
 ## Niveles 1-5, población, territorio, edificios construibles y cola de entrenamiento
 
 enum BuildingType {
+	GRANJA,
 	PUERTO,
 	MINA,
 	ASERRADERO,
@@ -17,6 +18,16 @@ enum BuildingType {
 ## Definición de edificios
 ## Formato: { nombre, coste_estrellas, coste_madera, coste_piedra, efecto }
 const BUILDING_DATA: Dictionary = {
+	BuildingType.GRANJA: {
+		"name": "Granja",
+		"cost_stars": 4,
+		"cost_wood": 0,
+		"cost_stone": 0,
+		"requires_water": false,
+		"effect": "food_production",
+		"effect_value": 1,
+		"description": "+1 población/turno."
+	},
 	BuildingType.PUERTO: {
 		"name": "Puerto",
 		"cost_stars": 10,
