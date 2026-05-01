@@ -60,13 +60,13 @@ ai_controller.gd::GDScript/GDScript::4416824420829868687::1777229397::0::1::::Si
 ai_decision.gd::GDScript/GDScript::710304807539934642::1777229498::0::1::::SireAIDecision<>RefCounted<><>0<>0<><>::
 ai_strategies.gd::GDScript/GDScript::7820034426772284145::1777227644::0::1::::SireAIStrategies<>RefCounted<><>0<>0<><>::
 ai_tests.gd::GDScript/GDScript::5490974421632040170::1777227786::0::1::::SireAITests<>RefCounted<><>0<>0<><>::
-camera_controller.gd::GDScript::8149508701212826850::1777634536::0::1::::CameraController<>Camera2D<><>0<>0<><>::
+camera_controller.gd::GDScript::8149508701212826850::1777637431::0::1::::CameraController<>Camera2D<><>0<>0<><>::
 cities.gd::GDScript/GDScript::6059730769646429932::1777631109::0::1::::Cities<>Node<><>0<>0<><>::
 city_renderer.gd::GDScript/GDScript::9157305602399404109::1777364993::0::1::::CityRenderer<>Node2D<><>0<>0<><>::
 combat.gd::GDScript/GDScript::2145539084350946819::1777227730::0::1::::Combat<>Node<><>0<>0<><>::
 game_config.gd::GDScript/GDScript::4831641807286808232::1777228091::0::1::::<>Node<><>0<>0<><>::
 game_manager.gd::GDScript/GDScript::7925304228372523571::1777631137::0::1::::<>Node<><>0<>0<><>::
-game_map.gd::GDScript/GDScript::3598488057915580643::1777634251::0::1::::GameMap<>Node2D<><>0<>0<><>::
+game_map.gd::GDScript::3598488057915580643::1777637378::0::1::::GameMap<>Node2D<><>0<>0<><>::
 game_over_screen.gd::GDScript/GDScript::2505368152812483807::1777365676::0::1::::GameOverScreen<>CanvasLayer<><>0<>0<><>::
 game_screen.gd::GDScript/GDScript::3669377840429289595::1777365965::0::1::::GameScreen<>Node2D<><>0<>0<><>::
 hex_grid.gd::GDScript/GDScript::7317244079222136567::1777227800::0::1::::HexGrid<>Node<><>0<>0<><>::
